@@ -1,15 +1,19 @@
 package com.cavelinker.cavelinkerserver;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class userCRUDTest {
 
     @Test
-    void testVariables() {
+    void testDatabaseInput() {
 
+        ApplicationServer applicationServer = new ApplicationServer();
         User user=new User();
         Message message=new Message();
         Schedule schedule=new Schedule();
@@ -35,6 +39,14 @@ public class userCRUDTest {
         schedule.setEndTime(zone);
         schedule.setActivity(testActivity);
 
+        SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+        Session session= sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        session.persist(user);
+        session.persist(message);
+        session.persist(schedule);
+        session.getTransaction().commit();
+
         System.out.println(user.getUser_ID());
         System.out.println(user.getEmail());
         System.out.println(user.getPassword());
@@ -48,6 +60,17 @@ public class userCRUDTest {
         System.out.println(schedule.getActivity());
         System.out.println(schedule.getStartTime());
         System.out.println(schedule.getEndTime());
+
+        List<User> users = session.createQuery("from User", User.class).getResultList();
+        List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
+        List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
+
+        assertNotNull(users);
+        assertNotNull(schedules);
+        assertNotNull(messages);
+
+        //terminate session factory, otherwise program won't end
+        sessionFactory.close();
 
     }
 
