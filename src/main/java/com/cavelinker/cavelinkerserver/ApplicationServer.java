@@ -61,6 +61,28 @@ public class ApplicationServer {
         List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
         List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
 
+        for(User userElement: users) {
+            System.out.println(user.getUser_ID());
+            System.out.println(user.getEmail());
+            System.out.println(user.getPassword());
+            System.out.println(user.getContactType());
+            System.out.println(user.getContactInfo());
+        }
+
+        for(Schedule scheduleElement: schedules) {
+            System.out.println(schedule.getSchedule_ID());
+            System.out.println(schedule.getDay());
+            System.out.println(schedule.getActivity());
+            System.out.println(schedule.getStartTime());
+            System.out.println(schedule.getEndTime());
+        }
+
+        for(Message messageElement: messages) {
+            System.out.println(message.getMessage_ID());
+            System.out.println(message.getGamerTag());
+            System.out.println(message.getMessage());
+        }
+
         //terminate session factory, otherwise program won't end
         sessionFactory.close();
     }

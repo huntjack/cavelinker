@@ -1,5 +1,5 @@
 FROM tomee:9.0.0-M8-jre11-ubuntu-plume
 
-COPY ./target/cavelinkerserver-1.0-SNAPSHOT.war /opt/tomcat/webapps/
+COPY ~/IdeaProjects/cavelinkerserver/target/cavelinkerserver-1.0-SNAPSHOT.war /usr/local/tomee/webapps/cavelinkerserver-1.0-SNAPSHOT.war
 
-CMD ["java", "com.cavelinker.cavelinkerserver.ApplicationServer"]
+CMD ["catalina.sh", "run"]
