@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=password
       - PGPASSWORD=password
   cavelinkerserver:
-    image: tomee:9.0.0-M8-jre11-ubuntu-plume
+    image: cavelinker-tomee
     restart: always
     ports:
       - 8888:8080
