@@ -1,6 +1,8 @@
 package com.cavelinker.cavelinkerserver;
 
 import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -40,6 +42,24 @@ public class ApplicationServer {
         session.persist(message);
         session.persist(schedule);
         session.getTransaction().commit();
+
+        System.out.println(user.getUser_ID());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+        System.out.println(user.getContactType());
+        System.out.println(user.getContactInfo());
+        System.out.println(message.getMessage_ID());
+        System.out.println(message.getGamerTag());
+        System.out.println(message.getMessage());
+        System.out.println(schedule.getSchedule_ID());
+        System.out.println(schedule.getDay());
+        System.out.println(schedule.getActivity());
+        System.out.println(schedule.getStartTime());
+        System.out.println(schedule.getEndTime());
+
+        List<User> users = session.createQuery("from User", User.class).getResultList();
+        List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
+        List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
 
         //terminate session factory, otherwise program won't end
         sessionFactory.close();
