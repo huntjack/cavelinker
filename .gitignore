@@ -11,6 +11,9 @@ target/
 *.iws
 *.iml
 *.ipr
+/context.xml
+/tomcat-users.xml
+/docker-compose.yml
 
 ### Eclipse ###
 .apt_generated
