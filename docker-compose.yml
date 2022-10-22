@@ -1,18 +1,16 @@
-version: '1.0'
+version: '3.8'
 services:
   postgresql:
     image: postgres:bullseye
-    restart: always
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
     environment:
       - POSTGRES_DB=cavelinker_database
       - PGUSER=postgres
       - POSTGRES_PASSWORD=password
       - PGPASSWORD=password
   cavelinkerserver:
-    image: cavelinker-tomee:1.0
-    restart: always
+    image: cavelinker:1.0
     ports:
       - 8888:8080
     depends_on:
