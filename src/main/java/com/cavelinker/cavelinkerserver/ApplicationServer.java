@@ -2,6 +2,7 @@ package com.cavelinker.cavelinkerserver;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,14 +36,6 @@ public class ApplicationServer {
         schedule.setEndTime(zone);
         schedule.setActivity(testActivity);
 
-        SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
-        Session session= sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.persist(user);
-        session.persist(message);
-        session.persist(schedule);
-        session.getTransaction().commit();
-
         System.out.println(user.getUser_ID());
         System.out.println(user.getEmail());
         System.out.println(user.getPassword());
@@ -57,34 +50,56 @@ public class ApplicationServer {
         System.out.println(schedule.getStartTime());
         System.out.println(schedule.getEndTime());
 
-        List<User> users = session.createQuery("from User", User.class).getResultList();
-        List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
-        List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
+        for(int retries=20; retries>0; retries--) {
+            try (SessionFactory sessionFactory=HibernateUtility.getSessionFactory();
+                 Session session = sessionFactory.getCurrentSession();) {
+                if (session != null) {
+                    session.beginTransaction();
+                    session.persist(user);
+                    session.persist(message);
+                    session.persist(schedule);
+                    session.getTransaction().commit();
 
-        for(User userElement: users) {
-            System.out.println(user.getUser_ID());
-            System.out.println(user.getEmail());
-            System.out.println(user.getPassword());
-            System.out.println(user.getContactType());
-            System.out.println(user.getContactInfo());
+                    List<User> users = session.createQuery("from User", User.class).getResultList();
+                    List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
+                    List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
+
+                    for (User userElement : users) {
+                        System.out.println(user.getUser_ID());
+                        System.out.println(user.getEmail());
+                        System.out.println(user.getPassword());
+                        System.out.println(user.getContactType());
+                        System.out.println(user.getContactInfo());
+                    }
+
+                    for (Schedule scheduleElement : schedules) {
+                        System.out.println(schedule.getSchedule_ID());
+                        System.out.println(schedule.getDay());
+                        System.out.println(schedule.getActivity());
+                        System.out.println(schedule.getStartTime());
+                        System.out.println(schedule.getEndTime());
+                    }
+
+                    for (Message messageElement : messages) {
+                        System.out.println(message.getMessage_ID());
+                        System.out.println(message.getGamerTag());
+                        System.out.println(message.getMessage());
+                    }
+                    break;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                System.err.println("Unable to connect: "+retries+" retries left: ");
+                applicationServer.waitFiveSeconds();
+            }
+            retries--;
         }
-
-        for(Schedule scheduleElement: schedules) {
-            System.out.println(schedule.getSchedule_ID());
-            System.out.println(schedule.getDay());
-            System.out.println(schedule.getActivity());
-            System.out.println(schedule.getStartTime());
-            System.out.println(schedule.getEndTime());
-        }
-
-        for(Message messageElement: messages) {
-            System.out.println(message.getMessage_ID());
-            System.out.println(message.getGamerTag());
-            System.out.println(message.getMessage());
-        }
-
-        //terminate session factory, otherwise program won't end
-        sessionFactory.close();
     }
-
+    public void waitFiveSeconds() {
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
 }
