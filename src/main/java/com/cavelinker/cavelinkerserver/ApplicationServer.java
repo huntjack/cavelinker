@@ -95,7 +95,6 @@ public class ApplicationServer extends Application {
                 System.err.println("Unable to connect: "+retries+" retries left: ");
                 applicationServer.waitFiveSeconds();
             }
-            retries--;
         }
     }
     public void waitFiveSeconds() {
