@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
   cavelinkerserver:
-    image: cavelinker:1.0
+    image: cavelinkerserver:1.0
     ports:
       - 8888:8080
     depends_on:

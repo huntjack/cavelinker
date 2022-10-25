@@ -4,10 +4,13 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-public class ApplicationServer {
+@ApplicationPath("/api")
+public class ApplicationServer extends Application {
 
     public static void main (String[] args) {
         ApplicationServer applicationServer = new ApplicationServer();
