@@ -1,26 +1,28 @@
 package com.cavelinker.cavelinkerserver;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
-    @Column(name="user_ID", updatable = false, nullable = false)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
     private Long user_ID;
-    private String email;
-    private String password;
+    private StringBuilder email;
+    private StringBuilder password;
     private String contactType;
     private StringBuilder contactInfo;
+    @OneToMany(mappedBy = "user")
+    private List<Message> messages;
 
     public Long getUser_ID() {return user_ID;}
-    public void setUser_ID(Long user_ID) {this.user_ID = user_ID;}
 
-    public String getEmail() {return email;}
-    public void setEmail(String email) {this.email = email;}
+    public StringBuilder getEmail() {return email;}
+    public void setEmail(StringBuilder email) {this.email = email;}
 
-    public String getPassword() {return password;}
-    public void setPassword(String password) {password = password;}
+    public StringBuilder getPassword() {return password;}
+    public void setPassword(StringBuilder password) {password = password;}
 
     public String getContactType() {return contactType;}
     public void setContactType(String contactType) {this.contactType = contactType;}

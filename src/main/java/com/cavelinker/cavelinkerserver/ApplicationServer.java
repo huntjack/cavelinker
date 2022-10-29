@@ -1,16 +1,12 @@
 package com.cavelinker.cavelinkerserver;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-@ApplicationPath("/api")
-public class ApplicationServer extends Application {
+public class ApplicationServer {
 
     public static void main (String[] args) {
         ApplicationServer applicationServer = new ApplicationServer();
@@ -19,24 +15,21 @@ public class ApplicationServer extends Application {
         Schedule schedule=new Schedule();
 
         StringBuilder testGamerTag=new StringBuilder("Eric");
-        StringBuilder testMessage=new StringBuilder("This is a message.");
+        StringBuilder testActivityMessage=new StringBuilder("This is an activity message.");
         String testContactType = new String("Discord");
         StringBuilder testContactInfo= new StringBuilder("newContactID");
         String day= new String("MONDAY");
-        ZonedDateTime zone = ZonedDateTime.parse("2016-10-05T08:20:10+05:30[Asia/Kolkata]");
         String testActivity= new String("FFXIV:Savage");
-        String testEmail = new String("hunt.jack01@gmail.com");
-        String testPassword= new String("password");
+        StringBuilder testEmail = new StringBuilder(new String("hunt.jack01@gmail.com"));
+        StringBuilder testPassword= new StringBuilder(new String("password"));
 
         user.setEmail(testEmail);
         user.setPassword(testPassword);
         user.setContactType(testContactType);
         user.setContactInfo(testContactInfo);
         message.setGamerTag(testGamerTag);
-        message.setMessage(testMessage);
+        message.setActivityMessage(testActivityMessage);
         schedule.setDay(day);
-        schedule.setStartTime(zone);
-        schedule.setEndTime(zone);
         schedule.setActivity(testActivity);
 
         System.out.println(user.getUser_ID());
@@ -46,12 +39,11 @@ public class ApplicationServer extends Application {
         System.out.println(user.getContactInfo());
         System.out.println(message.getMessage_ID());
         System.out.println(message.getGamerTag());
-        System.out.println(message.getMessage());
+        System.out.println(message.getActivityMessage());
         System.out.println(schedule.getSchedule_ID());
         System.out.println(schedule.getDay());
         System.out.println(schedule.getActivity());
-        System.out.println(schedule.getStartTime());
-        System.out.println(schedule.getEndTime());
+
 
         for(int retries=20; retries>0; retries--) {
             try (SessionFactory sessionFactory=HibernateUtility.getSessionFactory();
@@ -79,14 +71,12 @@ public class ApplicationServer extends Application {
                         System.out.println(schedule.getSchedule_ID());
                         System.out.println(schedule.getDay());
                         System.out.println(schedule.getActivity());
-                        System.out.println(schedule.getStartTime());
-                        System.out.println(schedule.getEndTime());
                     }
 
                     for (Message messageElement : messages) {
                         System.out.println(message.getMessage_ID());
                         System.out.println(message.getGamerTag());
-                        System.out.println(message.getMessage());
+                        System.out.println(message.getActivityMessage());
                     }
                     break;
                 }
