@@ -1,16 +1,17 @@
 version: '3.8'
 services:
-  postgresql:
-    image: postgres:bullseye
+  mysqlDB:
+    image: mysql:8.0.31-debian
     ports:
-      - 5432:5432
+      - 3307:3307
     environment:
-      - POSTGRES_DB=cavelinker_database
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - MYSQL_DATABASE=cavelinker_database
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
   cavelinkerserver:
     image: cavelinkerserver:1.0
     ports:
       - 8888:8080
     depends_on:
-      - "postgresql"
+      - "mysqlDB"

@@ -3,13 +3,24 @@ package com.cavelinker.cavelinkerserver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+
 
 public class ApplicationServer {
 
+    @PersistenceContext(unitName = "Cavelinker_Database")
+    EntityManager entityManager;
+
     public static void main (String[] args) {
         ApplicationServer applicationServer = new ApplicationServer();
+        applicationServer.tryToConnect();
+    }
+
+    @PostConstruct
+    public void tryToConnect() {
         User user=new User();
         Message message=new Message();
         Schedule schedule=new Schedule();
@@ -46,44 +57,45 @@ public class ApplicationServer {
 
 
         for(int retries=20; retries>0; retries--) {
-            try (SessionFactory sessionFactory=HibernateUtility.getSessionFactory();
-                 Session session = sessionFactory.getCurrentSession();) {
-                if (session != null) {
-                    session.beginTransaction();
-                    session.persist(user);
-                    session.persist(message);
-                    session.persist(schedule);
-                    session.getTransaction().commit();
+            try {
+                System.out.println("Connection attempt "+retries);
+                this.entityManager.persist(user);
+                this.entityManager.persist(message);
+                this.entityManager.persist(schedule);
 
-                    List<User> users = session.createQuery("from User", User.class).getResultList();
-                    List<Schedule> schedules = session.createQuery("from Schedule ", Schedule.class).getResultList();
-                    List<Message> messages = session.createQuery("from Message", Message.class).getResultList();
+                TypedQuery<User> userTypedQuery=this.entityManager.createQuery("SELECT user FROM User user", User.class);
+                List<User> users=userTypedQuery.getResultList();
+                TypedQuery<Schedule> scheduleTypedQuery=this.entityManager.createQuery("SELECT schedule FROM Schedule schedule", Schedule.class);
+                List<Schedule> schedules=scheduleTypedQuery.getResultList();
+                TypedQuery<Message> messageTypedQuery= this.entityManager.createQuery("SELECT message FROM Message message", Message.class);
+                List<Message> messages=messageTypedQuery.getResultList();
 
-                    for (User userElement : users) {
-                        System.out.println(user.getUser_ID());
-                        System.out.println(user.getEmail());
-                        System.out.println(user.getPassword());
-                        System.out.println(user.getContactType());
-                        System.out.println(user.getContactInfo());
-                    }
-
-                    for (Schedule scheduleElement : schedules) {
-                        System.out.println(schedule.getSchedule_ID());
-                        System.out.println(schedule.getDay());
-                        System.out.println(schedule.getActivity());
-                    }
-
-                    for (Message messageElement : messages) {
-                        System.out.println(message.getMessage_ID());
-                        System.out.println(message.getGamerTag());
-                        System.out.println(message.getActivityMessage());
-                    }
-                    break;
+                System.out.println("Printing Object Info:");
+                for (User userElement : users) {
+                    System.out.println(userElement.getUser_ID());
+                    System.out.println(userElement.getEmail());
+                    System.out.println(userElement.getPassword());
+                    System.out.println(userElement.getContactType());
+                    System.out.println(userElement.getContactInfo());
                 }
+
+                for (Schedule scheduleElement : schedules) {
+                    System.out.println(scheduleElement.getSchedule_ID());
+                    System.out.println(scheduleElement.getDay());
+                    System.out.println(scheduleElement.getActivity());
+                }
+
+                for (Message messageElement : messages) {
+                    System.out.println(messageElement.getMessage_ID());
+                    System.out.println(messageElement.getGamerTag());
+                    System.out.println(messageElement.getActivityMessage());
+                }
+                System.out.println("Object Info Printing Complete.");
+                break;
             } catch (Exception exception) {
                 exception.printStackTrace();
                 System.err.println("Unable to connect: "+retries+" retries left: ");
-                applicationServer.waitFiveSeconds();
+                this.waitFiveSeconds();
             }
         }
     }
