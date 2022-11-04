@@ -1,4 +1,4 @@
-package com.cavelinker.cavelinkerserver;
+package com.cavelinker.cavelinkerserver.model;
 
 import jakarta.persistence.*;
 import java.util.List;
@@ -15,6 +15,14 @@ public class User {
     private StringBuilder contactInfo;
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
+
+    User(){}
+    User(StringBuilder email, StringBuilder passowrd, String contactType, StringBuilder contactInfo) {
+        this.email=email;
+        this.password=password;
+        this.contactType=contactType;
+        this.contactInfo=contactInfo;
+    }
 
     public Long getUser_ID() {return user_ID;}
 

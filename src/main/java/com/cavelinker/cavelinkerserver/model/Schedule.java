@@ -1,4 +1,4 @@
-package com.cavelinker.cavelinkerserver;
+package com.cavelinker.cavelinkerserver.model;
 
 import jakarta.persistence.*;
 

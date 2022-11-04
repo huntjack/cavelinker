@@ -6,9 +6,9 @@
     <persistence-unit name="Cavelinker_Database" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:comp/env/jdbc/CavelinkerDB_Resource</jta-data-source>
-        <class>com.cavelinker.cavelinkerserver.User</class>
-        <class>com.cavelinker.cavelinkerserver.Message</class>
-        <class>com.cavelinker.cavelinkerserver.Schedule</class>
+        <class>com.cavelinker.cavelinkerserver.model.User</class>
+        <class>com.cavelinker.cavelinkerserver.model.Message</class>
+        <class>com.cavelinker.cavelinkerserver.model.Schedule</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

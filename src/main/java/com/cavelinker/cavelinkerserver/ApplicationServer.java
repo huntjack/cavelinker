@@ -3,6 +3,9 @@ package com.cavelinker.cavelinkerserver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.cavelinker.cavelinkerserver.model.Message;
+import com.cavelinker.cavelinkerserver.model.Schedule;
+import com.cavelinker.cavelinkerserver.model.User;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
