@@ -4,17 +4,16 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="Cavelinker_Database" transaction-type="JTA">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:comp/env/jdbc/CavelinkerDB_Resource</jta-data-source>
-        <class>com.cavelinker.cavelinkerserver.model.User</class>
-        <class>com.cavelinker.cavelinkerserver.model.Message</class>
-        <class>com.cavelinker.cavelinkerserver.model.Schedule</class>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <jta-data-source>jdbc/local-mysql</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="jakarta.persistence.schema-generation.scripts.action" value="drop-and-create"/>
-            <property name="jakarta.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
-            <property name="jakarta.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
+            <property name="jakarta.persistence.schema-generation.scripts.action" value="create"/>
+            <property name ="jakarta.persistence.schema-generation.create-source" value="metadata"/>
+            <property name="jakarta.persistence.schema-generation.scripts.create-target" value="/opt/payara/create.sql"/>
+
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <property name="jakarta.persistence.schema-generation.create-script-source" value="/opt/payara/create.sql" />
+            <property name="eclipselink.logging.level" value="FINEST"/>
         </properties>
     </persistence-unit>
 </persistence>

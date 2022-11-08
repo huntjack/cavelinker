@@ -28,29 +28,22 @@ public class ApplicationServer {
         Message message=new Message();
         Schedule schedule=new Schedule();
 
-        StringBuilder testGamerTag=new StringBuilder("Eric");
-        StringBuilder testActivityMessage=new StringBuilder("This is an activity message.");
+        String testGamerTag=new String("Eric");
+        String testActivityMessage=new String("This is an activity message.");
         String testContactType = new String("Discord");
-        StringBuilder testContactInfo= new StringBuilder("newContactID");
+        String testContactUserName= new String("newContactID");
         String day= new String("MONDAY");
         String testActivity= new String("FFXIV:Savage");
-        StringBuilder testEmail = new StringBuilder(new String("hunt.jack01@gmail.com"));
-        StringBuilder testPassword= new StringBuilder(new String("password"));
+        String testEmail = new String(new String("hunt.jack01@gmail.com"));
+        String testPassword= new String(new String("password"));
 
-        user.setEmail(testEmail);
-        user.setPassword(testPassword);
-        user.setContactType(testContactType);
-        user.setContactInfo(testContactInfo);
-        message.setGamerTag(testGamerTag);
-        message.setActivityMessage(testActivityMessage);
-        schedule.setDay(day);
-        schedule.setActivity(testActivity);
+
 
         System.out.println(user.getUser_ID());
         System.out.println(user.getEmail());
         System.out.println(user.getPassword());
         System.out.println(user.getContactType());
-        System.out.println(user.getContactInfo());
+        System.out.println(user.getContactUserName());
         System.out.println(message.getMessage_ID());
         System.out.println(message.getGamerTag());
         System.out.println(message.getActivityMessage());
@@ -79,7 +72,7 @@ public class ApplicationServer {
                     System.out.println(userElement.getEmail());
                     System.out.println(userElement.getPassword());
                     System.out.println(userElement.getContactType());
-                    System.out.println(userElement.getContactInfo());
+                    System.out.println(userElement.getContactUserName());
                 }
 
                 for (Schedule scheduleElement : schedules) {

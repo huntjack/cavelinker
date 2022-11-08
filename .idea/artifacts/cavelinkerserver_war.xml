@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="cavelinkerserver-1.0-SNAPSHOT.war">
+    <root id="archive" name="cavelinkerserver.war">
       <element id="artifact" artifact-name="cavelinkerserver:war exploded" />
     </root>
   </artifact>

@@ -2,16 +2,16 @@ package com.cavelinker.cavelinkerserver.resources;
 
 import com.cavelinker.cavelinkerserver.model.User;
 import com.cavelinker.cavelinkerserver.services.UserService;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/users")
+@Stateless
 public class UserResource {
 
-    UserService userService = new UserService();
+    @Inject private UserService userService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -19,4 +19,9 @@ public class UserResource {
     public User addUser(User user) {
         return userService.addUser(user);
     }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String test() {return "test";}
+
 }
