@@ -9,19 +9,26 @@ import jakarta.ws.rs.core.MediaType;
 
 @Path("/users")
 @Stateless
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     @Inject private UserService userService;
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public User addUser(User user) {
         return userService.addUser(user);
     }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test() {return "test";}
+    @DELETE
+    @Path("/{userID}")
+    public void deleteUser(@PathParam("userID") long userID) {
+        userService.deleteUser(userID);
+    }
+    @PUT
+    @Path("/{userID}")
+    public User updateUser(@PathParam("userID") long userID, User user) {
+        user.setUser_ID(userID);
+        return userService.updateUser(user);
+    }
 
 }

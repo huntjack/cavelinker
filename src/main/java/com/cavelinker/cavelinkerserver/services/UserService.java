@@ -16,4 +16,17 @@ public class UserService {
         entityManager.persist(user);
         return user;
     }
+    public void deleteUser(long userID) {
+        User user=entityManager.find(User.class, userID);
+        entityManager.remove(user);
+    }
+    public User updateUser(User inputUser) {
+        User userToBeUpdated=entityManager.find(User.class, inputUser.getUser_ID());
+        entityManager.detach(userToBeUpdated);
+        userToBeUpdated.setEmail(inputUser.getEmail());
+        userToBeUpdated.setPassword(inputUser.getPassword());
+        userToBeUpdated.setContactType(inputUser.getContactType());
+        userToBeUpdated.setContactUserName(inputUser.getContactUserName());
+        return entityManager.merge(userToBeUpdated);
+    }
 }

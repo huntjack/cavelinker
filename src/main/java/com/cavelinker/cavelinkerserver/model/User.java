@@ -10,6 +10,7 @@ public class User {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long user_ID;
+    @Column(unique=true)
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
