@@ -17,7 +17,7 @@ public class User {
     private ContactType contactType;
     private String contactUserName;
     @OneToMany(mappedBy = "user")
-    private List<Message> messages;
+    private List<Activity> activities;
 
     public User(){}
     public User(String email, String password, ContactType contactType, String contactUserName) {
