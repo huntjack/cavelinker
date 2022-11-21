@@ -14,7 +14,6 @@
           <element id="module-output" name="cavelinkerserver" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: jakarta.ws.rs:jakarta.ws.rs-api:3.1.0" />
           <element id="library" level="project" name="Maven: com.mysql:mysql-connector-j:8.0.31" />
           <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.19.4" />
         </element>
