@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  mysqlDB:
+  mysql:
     image: mysql:8.0.31-debian
     ports:
       - 3307:3306
@@ -13,6 +13,9 @@ services:
     image: cavelinkerserver:1.0
     ports:
       - 8080:8080
-      - 4848:4848
+    environment:
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_JDBC_URL=jdbc:mysql://mysql:3306/cavelinker_database
     depends_on:
-      - "mysqlDB"
+      - "mysql"

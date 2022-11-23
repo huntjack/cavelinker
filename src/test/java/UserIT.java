@@ -1,56 +1,84 @@
 import com.cavelinker.cavelinkerserver.enums.ContactType;
 import com.cavelinker.cavelinkerserver.model.User;
-import io.restassured.specification.RequestSpecification;
+
+import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.utility.MountableFile;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.*;
+import static io.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @Testcontainers
 public class UserIT {
     private static Network network = Network.newNetwork();
+    private static Path path;
     @Container
-    static MySQLContainer mysqlDB = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.31-debian"))
+    static MySQLContainer mysql = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.31-debian"))
             .withNetwork(network)
-            .withNetworkAliases("mysqlDB");
+            .withNetworkAliases("mysql");
     @Container
-    static GenericContainer payara_container = new GenericContainer(DockerImageName.parse("payara/micro:5.2022.4-jdk11"))
+    static GenericContainer payara_container = new GenericContainer(new ImageFromDockerfile()
+            .withDockerfile(path=Paths.get("/home/jack/IdeaProjects/cavelinkerserver/Dockerfile")))
             .withExposedPorts(8080)
-            .withCopyFileToContainer(MountableFile.forClasspathResource("target/cavelinkerserver/WEB-INF/lib/mysql-connector-j-8.0.31.jar"), "/opt/payara/mysql-connector-j-8.0.31.jar")
-            .withCopyFileToContainer(MountableFile.forHostPath("target/cavelinkerserver.war"), "/opt/payara/cavelinkerserver.war")
-            .waitingFor(Wait.forLogMessage(".* Payara Micro .* ready in .*\\s", 1))
-            .withCommand("--addlibs /opt/payara/mysql-connector-j-8.0.31.jar --deploy /opt/payara/cavelinkerserver.war --noCluster")
-            .dependsOn(mysqlDB)
+            // .waitingFor(Wait.forLogMessage(".* Payara Micro .* ready in .*\\s", 1))
+            .dependsOn(mysql)
             .withNetwork(network)
-            .withEnv("DB_USER", mysqlDB.getUsername())
-            .withEnv("DB_PASSWORD", mysqlDB.getPassword())
-            .withEnv("DB_JDBC_URL", "jdbc:mysql://mysql:3306/" + mysqlDB.getDatabaseName());
+            .withEnv("DB_USER", mysql.getUsername())
+            .withEnv("DB_PASSWORD", mysql.getPassword())
+            .withEnv("DB_JDBC_URL", "jdbc:mysql://mysql:3306/" + mysql.getDatabaseName());
 
+    @BeforeEach
+    void setup() throws InterruptedException {
+        try {
+            Thread.sleep(30000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    private static RequestSpecification requestSpecification;
+    @Test
+    public void getHappyPath() {
+        given()
+                .when()
+                .get("http://" + payara_container.getHost() + ":" + payara_container.getMappedPort(8080) + "/cavelinkerserver/api/users/test")
+                .then()
+                .assertThat()
+                .statusCode(200);
+    }
+
 
     @Test
     public void PostHappyPath() {
         User user;
-        given()
+        Response response = given()
                 .header("Content-Type", "application/json")
                 .body(user = new User("hunt.jack01@gmail.com", "myPassword", ContactType.FACEBOOK, "Eric Blackwood"))
                 .when()
-                .post("http://" + payara_container.getHost() + ":" + payara_container.getMappedPort(8080) + "/cavelinkerserver/api/users")
-                .then()
-                .statusCode(204)
+                .post("http://" + payara_container.getHost() + ":" + payara_container.getMappedPort(8080) + "/cavelinkerserver/api/users");
+
+        ContactType contactType=
+                response.then()
+                .assertThat()
+                .statusCode(201)
+                .header("Content-Type", "application/json")
                 .body("email", equalTo(user.getEmail()))
                 .body("password", equalTo(user.getPassword()))
-                .body("contactType", equalTo(user.getContactType()))
-                .body("contactUserName", equalTo(user.getContactUserName()));
+                .body("contactUserName", equalTo(user.getContactUserName()))
+                .extract().path("contactType");
+                assertThat(contactType, equalTo(ContactType.FACEBOOK));
     }
 
 

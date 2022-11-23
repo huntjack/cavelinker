@@ -1,6 +1,5 @@
 package com.cavelinker.cavelinkerserver.resources;
 
-import com.cavelinker.cavelinkerserver.enums.ContactType;
 import com.cavelinker.cavelinkerserver.model.User;
 import com.cavelinker.cavelinkerserver.services.UserService;
 import jakarta.ejb.Stateless;
@@ -24,9 +23,7 @@ public class UserResource {
     @GET
     @Path("/test")
     public Response isServerUp() {
-        User user=new User("hunt.jack01@gmail.com", "myPassword", ContactType.FACEBOOK, "Eric Blackwood");
         return Response.ok()
-                .entity(user)
                 .build();
     }
 
