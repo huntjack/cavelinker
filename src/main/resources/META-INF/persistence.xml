@@ -13,6 +13,7 @@
 
             <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
             <property name="jakarta.persistence.schema-generation.create-script-source" value="/opt/payara/create.sql" />
+
             <property name="eclipselink.logging.level" value="FINEST"/>
         </properties>
     </persistence-unit>

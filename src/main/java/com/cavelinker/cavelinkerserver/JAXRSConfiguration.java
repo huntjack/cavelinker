@@ -25,10 +25,4 @@ import com.cavelinker.cavelinkerserver.resources.*;
 )
 public class JAXRSConfiguration extends Application {
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        final Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(UserResource.class);
-        return classes;
-    }
 }

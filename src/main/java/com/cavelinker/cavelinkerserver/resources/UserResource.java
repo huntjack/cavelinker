@@ -20,13 +20,6 @@ public class UserResource {
 
     @Inject private UserService userService;
 
-    @GET
-    @Path("/test")
-    public Response isServerUp() {
-        return Response.ok()
-                .build();
-    }
-
     @POST
     public Response addUser(User user, @Context UriInfo uriInfo) {
         User persistedUser=userService.addUser(user);

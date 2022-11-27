@@ -2,36 +2,23 @@ package com.cavelinker.cavelinkerserver;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
 import com.cavelinker.cavelinkerserver.model.User;
-
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.*;
-import static io.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
 @Testcontainers
-public class UserIT {
+public class UserIT extends cavelinkerIT {
 
     @Test
-    public void getHappyPath() {
-        given()
-                .when()
-                .get("http://" + payara_container.getHost() + ":" + payara_container.getMappedPort(8080) + "/cavelinkerserver/api/users/test")
-                .then()
-                .assertThat()
-                .statusCode(200);
-    }
-
-
-    @Test
-    public void PostHappyPath() {
+    public void postHappyPath() {
         User user;
-        given()
+        given(requestSpecification)
                 .header("Content-Type", "application/json")
-                .body(user = new User("hunt.jack01@gmail.com", "myPassword", ContactType.FACEBOOK, "Eric Blackwood"))
+                .body(user = new User("testpost01@gmail.com", "post1Password", ContactType.FACEBOOK, "post1contact"))
                 .when()
-                .post("http://" + payara_container.getHost() + ":" + payara_container.getMappedPort(8080) + "/cavelinkerserver/api/users")
+                .post("/users")
                 .then()
                 .assertThat()
                 .statusCode(201)
@@ -41,6 +28,30 @@ public class UserIT {
                 .body("contactType", equalTo(ContactType.FACEBOOK.toString()))
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
-
-
+    @Test
+    public void updateHappyPath() {
+        User user;
+        given(requestSpecification)
+                .header("Content-Type", "application/json")
+                .body(user = new User("updatesuccess@gmail.com", "update1new", ContactType.DISCORD, "newUpdateContact"))
+                .when()
+                .put("/users/1")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .header("Content-Type", "application/json")
+                .body("email", equalTo(user.getEmail()))
+                .body("password", equalTo(user.getPassword()))
+                .body("contactType", equalTo(ContactType.DISCORD.toString()))
+                .body("contactUserName", equalTo(user.getContactUserName()));
+    }
+    @Test
+    public void deleteHappyPath() {
+        given(requestSpecification)
+                .when()
+                .delete("/users/2")
+                .then()
+                .assertThat()
+                .statusCode(204);
+    }
 }
