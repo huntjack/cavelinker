@@ -27,7 +27,7 @@ public class cavelinkerIT {
         cavelinkerserver= new GenericContainer(new ImageFromDockerfile()
                 .withDockerfile(Paths.get("/home/jack/IdeaProjects/cavelinkerserver/Dockerfile")))
                 .withExposedPorts(8080)
-                .waitingFor(Wait.forLogMessage(".* Payara Micro .* ready in .*\\s", 1))
+                .waitingFor(Wait.forHttp("/cavelinkerserver/api/application.wadl").forStatusCode(200))
                 .dependsOn(mysql)
                 .withNetwork(network)
                 .withNetworkAliases("cavelinkerserver")

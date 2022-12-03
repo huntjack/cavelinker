@@ -9,13 +9,17 @@ import jakarta.persistence.PersistenceContext;
 @Stateless
 public class UserService {
 
-    @PersistenceContext(unitName = "Cavelinker_Database")
+    @PersistenceContext(unitName = "cavelinker_database")
     EntityManager entityManager;
     public UserService() {}
     public User addUser(User user) {
         entityManager.persist(user);
         return user;
     }
+    /*
+    public long authenticateUser(String userName, String userPassword) {
+        //write JPQL query that finds user via userName, checks that userPassword equals the password in the DB and returns userID
+    } */
     public void deleteUser(long userID) {
         User user=entityManager.find(User.class, userID);
         entityManager.remove(user);
@@ -24,7 +28,6 @@ public class UserService {
         User userToBeUpdated=entityManager.find(User.class, inputUser.getUser_ID());
         entityManager.detach(userToBeUpdated);
         userToBeUpdated.setEmail(inputUser.getEmail());
-        userToBeUpdated.setPassword(inputUser.getPassword());
         userToBeUpdated.setContactType(inputUser.getContactType());
         userToBeUpdated.setContactUserName(inputUser.getContactUserName());
         return entityManager.merge(userToBeUpdated);

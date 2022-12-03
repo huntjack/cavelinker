@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
 
-@Path("/users")
+@Path("/")
 @Stateless
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -21,6 +21,7 @@ public class UserResource {
     @Inject private UserService userService;
 
     @POST
+    @Path("users")
     public Response addUser(User user, @Context UriInfo uriInfo) {
         User persistedUser=userService.addUser(user);
         String newID=String.valueOf(persistedUser.getUser_ID());
@@ -32,14 +33,14 @@ public class UserResource {
                 .build();
     }
     @DELETE
-    @Path("/{userID}")
+    @Path("secured/users/{userID}")
     public Response deleteUser(@PathParam("userID") long userID) {
         userService.deleteUser(userID);
         return Response.noContent()
                 .build();
     }
     @PUT
-    @Path("/{userID}")
+    @Path("secured/users/{userID}")
     public Response updateUser(@PathParam("userID") long userID, User user) {
         user.setUser_ID(userID);
         User updatedUser=userService.updateUser(user);

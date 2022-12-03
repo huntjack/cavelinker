@@ -11,12 +11,12 @@ public class DatabaseSetup {
     public static void populateUsers(RequestSpecification requestSpecification) {
         given(requestSpecification)
                 .header("Content-Type", "application/json")
-                .body(new User("testupdate01@gmail.com", "update1", ContactType.INSTAGRAM, "testupdate1"))
+                .body(new User("testupdate01@gmail.com", ContactType.INSTAGRAM, "testupdate1"))
                 .when()
                 .post("/users");
         given(requestSpecification)
                 .header("Content-Type", "application/json")
-                .body(new User("testdelete1@gmail.com", "testdelete1", ContactType.TWITTER, "testdelete1"))
+                .body(new User("testdelete1@gmail.com", ContactType.TWITTER, "testdelete1"))
                 .when()
                 .post("/users");
     }

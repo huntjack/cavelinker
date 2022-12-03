@@ -16,7 +16,7 @@ public class UserIT extends cavelinkerIT {
         User user;
         given(requestSpecification)
                 .header("Content-Type", "application/json")
-                .body(user = new User("testpost01@gmail.com", "post1Password", ContactType.FACEBOOK, "post1contact"))
+                .body(user = new User("testpost01@gmail.com", ContactType.FACEBOOK, "post1contact"))
                 .when()
                 .post("/users")
                 .then()
@@ -24,7 +24,6 @@ public class UserIT extends cavelinkerIT {
                 .statusCode(201)
                 .header("Content-Type", "application/json")
                 .body("email", equalTo(user.getEmail()))
-                .body("password", equalTo(user.getPassword()))
                 .body("contactType", equalTo(ContactType.FACEBOOK.toString()))
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
@@ -33,15 +32,14 @@ public class UserIT extends cavelinkerIT {
         User user;
         given(requestSpecification)
                 .header("Content-Type", "application/json")
-                .body(user = new User("updatesuccess@gmail.com", "update1new", ContactType.DISCORD, "newUpdateContact"))
+                .body(user = new User("updatesuccess@gmail.com", ContactType.DISCORD, "newUpdateContact"))
                 .when()
-                .put("/users/1")
+                .put("/secured/users/1")
                 .then()
                 .assertThat()
                 .statusCode(200)
                 .header("Content-Type", "application/json")
                 .body("email", equalTo(user.getEmail()))
-                .body("password", equalTo(user.getPassword()))
                 .body("contactType", equalTo(ContactType.DISCORD.toString()))
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
@@ -49,7 +47,7 @@ public class UserIT extends cavelinkerIT {
     public void deleteHappyPath() {
         given(requestSpecification)
                 .when()
-                .delete("/users/2")
+                .delete("/secured/users/2")
                 .then()
                 .assertThat()
                 .statusCode(204);
