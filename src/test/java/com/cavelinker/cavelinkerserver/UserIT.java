@@ -1,7 +1,7 @@
 package com.cavelinker.cavelinkerserver;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
-import com.cavelinker.cavelinkerserver.model.User;
+import com.cavelinker.cavelinkerserver.entities.User;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 

@@ -1,4 +1,4 @@
-package com.cavelinker.cavelinkerserver.model;
+package com.cavelinker.cavelinkerserver.entities;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    private Long user_ID;
+    private Long user_Id;
     @Column(unique=true)
     private String email;
     @Enumerated(EnumType.STRING)
@@ -18,6 +18,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Activity> activities;
 
+    public void addActivity(Activity activity) {
+        this.activities.add(activity);
+        activity.setUser(this);
+    }
     public User(){}
     public User(String email, ContactType contactType, String contactUserName) {
         this.email=email;
@@ -25,8 +29,8 @@ public class User {
         this.contactUserName=contactUserName;
     }
 
-    public Long getUser_ID() {return user_ID;}
-    public void setUser_ID(Long user_ID) {this.user_ID = user_ID;}
+    public Long getUser_Id() {return user_Id;}
+    public void setUser_Id(Long user_Id) {this.user_Id = user_Id;}
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email = email;}
     public ContactType getContactType() {return contactType;}

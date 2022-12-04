@@ -1,6 +1,6 @@
 package com.cavelinker.cavelinkerserver.services;
 
-import com.cavelinker.cavelinkerserver.model.User;
+import com.cavelinker.cavelinkerserver.entities.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,16 +20,16 @@ public class UserService {
     public long authenticateUser(String userName, String userPassword) {
         //write JPQL query that finds user via userName, checks that userPassword equals the password in the DB and returns userID
     } */
-    public void deleteUser(long userID) {
-        User user=entityManager.find(User.class, userID);
-        entityManager.remove(user);
-    }
     public User updateUser(User inputUser) {
-        User userToBeUpdated=entityManager.find(User.class, inputUser.getUser_ID());
+        User userToBeUpdated=entityManager.find(User.class, inputUser.getUser_Id());
         entityManager.detach(userToBeUpdated);
         userToBeUpdated.setEmail(inputUser.getEmail());
         userToBeUpdated.setContactType(inputUser.getContactType());
         userToBeUpdated.setContactUserName(inputUser.getContactUserName());
         return entityManager.merge(userToBeUpdated);
+    }
+    public void deleteUser(long userID) {
+        User user=entityManager.find(User.class, userID);
+        entityManager.remove(user);
     }
 }
