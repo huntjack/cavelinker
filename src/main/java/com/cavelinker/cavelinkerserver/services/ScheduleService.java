@@ -10,6 +10,7 @@ public class ScheduleService {
     public ScheduleService() {}
     public Schedule addSchedule(Schedule schedule) {
         entityManager.persist(schedule);
+        entityManager.flush();
         return schedule;
     }
     public Schedule updateSchedule(Schedule inputSchedule) {
