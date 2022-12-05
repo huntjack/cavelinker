@@ -23,13 +23,13 @@ public class UserResource {
     @POST
     @Path("users")
     public Response addUser(User user, @Context UriInfo uriInfo) {
-        User persistedUser=userService.addUser(user);
-        String newId=String.valueOf(persistedUser.getUser_Id());
+        user=userService.addUser(user);
+        String newId=String.valueOf(user.getUser_Id());
         URI uri=uriInfo.getAbsolutePathBuilder()
                 .path(newId)
                 .build();
         return Response.created(uri)
-                .entity(persistedUser)
+                .entity(user)
                 .build();
     }
     @PUT

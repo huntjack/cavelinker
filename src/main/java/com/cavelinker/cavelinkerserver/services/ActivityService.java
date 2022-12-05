@@ -10,6 +10,7 @@ public class ActivityService {
     public ActivityService() {}
     public Activity addActivity(Activity activity) {
         entityManager.persist(activity);
+        entityManager.flush();
         return activity;
     }
     public Activity updateActivity(Activity inputActivity) {
@@ -19,6 +20,7 @@ public class ActivityService {
         activityToBeUpdated.setActivityType(inputActivity.getActivityType());
         activityToBeUpdated.setServerName(inputActivity.getServerName());
         activityToBeUpdated.setActivityMessage(inputActivity.getActivityMessage());
+        activityToBeUpdated.setUser(inputActivity.getUser());
         return entityManager.merge(activityToBeUpdated);
     }
     public void deleteActivity(long activityId) {

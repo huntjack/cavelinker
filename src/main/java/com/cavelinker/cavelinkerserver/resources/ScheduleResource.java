@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
 
-@Path("/")
 @Stateless
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

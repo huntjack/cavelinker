@@ -23,6 +23,15 @@ public class Activity {
     @JoinColumn(name="user_Id")
     private User user;
 
+    public Activity() {}
+    public Activity(String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage, User user) {
+        this.gamerTag=gamerTag;
+        this.activityType=activityType;
+        this.serverName=serverName;
+        this.activityMessage=activityMessage;
+        this.user=user;
+    }
+
     public Long getActivity_Id() {return activity_Id;}
     public void setActivity_Id(Long activity_Id) {this.activity_Id = activity_Id;}
 
@@ -38,5 +47,6 @@ public class Activity {
     public String getActivityMessage() {return activityMessage;}
     public void setActivityMessage(String activityMessage) {this.activityMessage = activityMessage;}
 
+    public User getUser() {return user;}
     public void setUser(User user) {this.user = user;}
 }

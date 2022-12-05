@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@NamedQuery(name="findUserByEmail",
+        query="SELECT DISTINCT user FROM User user WHERE user.email= :email")
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -15,6 +17,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private ContactType contactType;
     private String contactUserName;
+
     @OneToMany(mappedBy = "user")
     private List<Activity> activities;
 
@@ -37,5 +40,8 @@ public class User {
     public void setContactType(ContactType contactType) {this.contactType = contactType;}
     public String getContactUserName() {return contactUserName;}
     public void setContactUserName(String contactUserName) {this.contactUserName = contactUserName;}
+
+    public List<Activity> getActivities() {return activities;}
+    public void setActivities(List<Activity> activities) {this.activities = activities;}
 
 }

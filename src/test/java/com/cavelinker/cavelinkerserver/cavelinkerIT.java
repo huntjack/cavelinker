@@ -27,7 +27,7 @@ public class cavelinkerIT {
         cavelinkerserver= new GenericContainer(new ImageFromDockerfile()
                 .withDockerfile(Paths.get("/home/jack/IdeaProjects/cavelinkerserver/Dockerfile")))
                 .withExposedPorts(8080)
-                .waitingFor(Wait.forHttp("/cavelinkerserver/api/application.wadl").forStatusCode(200))
+                .waitingFor(Wait.forHttp("/api/application.wadl").forStatusCode(200))
                 .dependsOn(mysql)
                 .withNetwork(network)
                 .withNetworkAliases("cavelinkerserver")
@@ -39,7 +39,7 @@ public class cavelinkerIT {
         cavelinkerserver.start();
 
         String baseUri = "http://" + cavelinkerserver.getHost() + ":" + cavelinkerserver.getMappedPort(8080) +
-                "/cavelinkerserver/api";
+                "/api";
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(baseUri)
                 .build();
