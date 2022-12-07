@@ -25,10 +25,10 @@ public class User implements Serializable {
     private ContactType contactType;
     private String contactUserName;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Activity> activities;
 
-    public void addActivityMapping(Activity activity) {
+    public void addActivityBidirectionalMapping(Activity activity) {
         this.activities.add(activity);
         activity.setUser(this);
     }

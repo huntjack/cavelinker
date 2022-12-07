@@ -1,10 +1,13 @@
 package com.cavelinker.cavelinkerserver.services;
 
+import com.cavelinker.cavelinkerserver.entities.Activity;
 import com.cavelinker.cavelinkerserver.entities.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 
 @ApplicationScoped
@@ -37,13 +40,25 @@ public class UserService {
         userToBeUpdated.setEmail(inputUser.getEmail());
         userToBeUpdated.setContactType(inputUser.getContactType());
         userToBeUpdated.setContactUserName(inputUser.getContactUserName());
-        userToBeUpdated.setActivities(inputUser.getActivities());
         return entityManager.merge(userToBeUpdated);
     }
     @Transactional
     public void deleteUser(long userId) {
         User user=entityManager.find(User.class, userId);
         entityManager.remove(user);
+    }
+    @Transactional
+    public void deleteActivity(long userId, long activityId) {
+        User userToBeUpdated=entityManager.find(User.class, userId);
+        entityManager.detach(userToBeUpdated);
+        List<Activity> activityList=userToBeUpdated.getActivities();
+        for(Activity activity: activityList) {
+            if(activity.getActivityId()==activityId) {
+                activityList.remove(activity);
+            }
+        }
+        userToBeUpdated.setActivities(activityList);
+        entityManager.merge(userToBeUpdated);
     }
 
     public User findUser(long userId) {

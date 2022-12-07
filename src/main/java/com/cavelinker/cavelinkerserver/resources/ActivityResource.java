@@ -34,7 +34,7 @@ public class ActivityResource {
         Step 4: activityService.updateActivity(activity); //change updateActivity to update mapping variables
          */
         User user=userService.findUser(userId);
-        user.addActivityMapping(activity);
+        user.addActivityBidirectionalMapping(activity);
         userService.saveActivityMappings(user);
         activityService.saveUserMapping(activity);
         String newId=String.valueOf(activity.getActivityId());
@@ -47,7 +47,7 @@ public class ActivityResource {
     }
     @PUT
     @Path("/{activityId}")
-    public Response updateUser(@PathParam("activityId") long activityId, Activity activity) {
+    public Response updateActivity(@PathParam("activityId") long activityId, Activity activity) {
         activity.setActivityId(activityId);
         Activity updatedActivity=activityService.updateActivity(activity);
         return Response.ok()
@@ -56,8 +56,8 @@ public class ActivityResource {
     }
     @DELETE
     @Path("/{activityId}")
-    public Response deleteActivity(@PathParam("activityId") long activityId) {
-        activityService.deleteActivity(activityId);
+    public Response deleteActivity(@PathParam("userId")long userId, @PathParam("activityId") long activityId) {
+        userService.deleteActivity(userId, activityId);
         return Response.noContent()
                 .build();
     }

@@ -33,10 +33,5 @@ public class ActivityService {
         activityToBeUpdated.setActivityMessage(inputActivity.getActivityMessage());
         return entityManager.merge(activityToBeUpdated);
     }
-    @Transactional
-    public void deleteActivity(long activityId) {
-        Activity activity=entityManager.find(Activity.class, activityId);
-        entityManager.remove(activity);
-    }
     public ActivityService() {}
 }
