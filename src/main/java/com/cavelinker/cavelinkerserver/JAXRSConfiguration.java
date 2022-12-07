@@ -5,6 +5,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ApplicationPath("/api")
 @ApplicationScoped
 @DataSourceDefinition(
@@ -20,5 +23,12 @@ import jakarta.ws.rs.core.Application;
         }
 )
 public class JAXRSConfiguration extends Application {
+
+        @Override
+        public Map<String, Object> getProperties() {
+                Map<String, Object> props = new HashMap<>();
+                props.put("jersey.config.jsonFeature", "JacksonFeature");
+                return props;
+        }
 
 }

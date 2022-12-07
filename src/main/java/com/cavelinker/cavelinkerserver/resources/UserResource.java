@@ -2,7 +2,6 @@ package com.cavelinker.cavelinkerserver.resources;
 
 import com.cavelinker.cavelinkerserver.entities.User;
 import com.cavelinker.cavelinkerserver.services.UserService;
-import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -13,18 +12,18 @@ import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("/")
-@Stateless
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    @Inject private UserService userService;
+    @Inject
+    private UserService userService;
 
     @POST
     @Path("users")
-    public Response addUser(User user, @Context UriInfo uriInfo) {
-        user=userService.addUser(user);
-        String newId=String.valueOf(user.getUser_Id());
+    public Response createUser(User user, @Context UriInfo uriInfo) {
+        user=userService.createUser(user);
+        String newId=String.valueOf(user.getUserId());
         URI uri=uriInfo.getAbsolutePathBuilder()
                 .path(newId)
                 .build();
@@ -35,7 +34,7 @@ public class UserResource {
     @PUT
     @Path("secured/users/{userId}")
     public Response updateUser(@PathParam("userId") long userId, User user) {
-        user.setUser_Id(userId);
+        user.setUserId(userId);
         User updatedUser=userService.updateUser(user);
         return Response.ok()
                 .entity(updatedUser)
@@ -47,10 +46,6 @@ public class UserResource {
         userService.deleteUser(userId);
         return Response.noContent()
                 .build();
-    }
-    @Path("secured/user/{userId}/activities")
-    public ActivityResource getActivityResource() {
-        return new ActivityResource();
     }
 
 }

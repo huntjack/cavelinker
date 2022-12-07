@@ -2,7 +2,6 @@ package com.cavelinker.cavelinkerserver.resources;
 
 import com.cavelinker.cavelinkerserver.entities.Schedule;
 import com.cavelinker.cavelinkerserver.services.ScheduleService;
-import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -12,7 +11,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
 
-@Stateless
+@Path("/secured/users/{userId}/activities/{activityId}/schedules")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ScheduleResource {
@@ -20,9 +19,9 @@ public class ScheduleResource {
     private ScheduleService scheduleService;
 
     @POST
-    public Response addSchedule(Schedule schedule, @Context UriInfo uriInfo) {
-        schedule=scheduleService.addSchedule(schedule);
-        String newId=String.valueOf(schedule.getSchedule_Id());
+    public Response createSchedule(Schedule schedule, @Context UriInfo uriInfo) {
+        schedule=scheduleService.createSchedule(schedule);
+        String newId=String.valueOf(schedule.getScheduleId());
         URI uri=uriInfo.getAbsolutePathBuilder()
                 .path(newId)
                 .build();
@@ -31,16 +30,16 @@ public class ScheduleResource {
                 .build();
     }
     @PUT
-    @Path("{scheduleId}")
+    @Path("/{scheduleId}")
     public Response updateSchedule(@PathParam("scheduleId") long scheduleId, Schedule schedule) {
-        schedule.setSchedule_Id(scheduleId);
+        schedule.setScheduleId(scheduleId);
         Schedule updatedSchedule=scheduleService.updateSchedule(schedule);
         return Response.ok()
                 .entity(updatedSchedule)
                 .build();
     }
     @DELETE
-    @Path("{scheduleId}")
+    @Path("/{scheduleId}")
     public Response deleteSchedule(@PathParam("scheduleId") long scheduleId) {
         scheduleService.deleteSchedule(scheduleId);
         return Response.noContent()

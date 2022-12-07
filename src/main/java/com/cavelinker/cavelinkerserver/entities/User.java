@@ -1,17 +1,24 @@
 package com.cavelinker.cavelinkerserver.entities;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId")
 @NamedQuery(name="findUserByEmail",
         query="SELECT DISTINCT user FROM User user WHERE user.email= :email")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    private Long user_Id;
+    private Long userId;
     @Column(unique=true)
     private String email;
     @Enumerated(EnumType.STRING)
@@ -21,7 +28,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Activity> activities;
 
-    public void addActivity(Activity activity) {
+    public void addActivityMapping(Activity activity) {
         this.activities.add(activity);
         activity.setUser(this);
     }
@@ -32,8 +39,8 @@ public class User {
         this.contactUserName=contactUserName;
     }
 
-    public Long getUser_Id() {return user_Id;}
-    public void setUser_Id(Long user_Id) {this.user_Id = user_Id;}
+    public Long getUserId() {return userId;}
+    public void setUserId(Long userId) {this.userId = userId;}
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email = email;}
     public ContactType getContactType() {return contactType;}

@@ -2,15 +2,22 @@ package com.cavelinker.cavelinkerserver.entities;
 
 import com.cavelinker.cavelinkerserver.enums.ActivityType;
 import com.cavelinker.cavelinkerserver.enums.ServerName;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Activity {
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "activityId")
+public class Activity implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    private Long activity_Id;
+    private Long activityId;
     private String gamerTag;
     @Enumerated(EnumType.STRING)
     private ActivityType activityType;
@@ -20,20 +27,19 @@ public class Activity {
     @OneToMany(mappedBy = "activity")
     private List<Schedule> schedules;
     @ManyToOne
-    @JoinColumn(name="user_Id")
+    @JoinColumn(name="userId")
     private User user;
 
     public Activity() {}
-    public Activity(String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage, User user) {
+    public Activity(String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage) {
         this.gamerTag=gamerTag;
         this.activityType=activityType;
         this.serverName=serverName;
         this.activityMessage=activityMessage;
-        this.user=user;
     }
 
-    public Long getActivity_Id() {return activity_Id;}
-    public void setActivity_Id(Long activity_Id) {this.activity_Id = activity_Id;}
+    public Long getActivityId() {return activityId;}
+    public void setActivityId(Long activityId) {this.activityId = activityId;}
 
     public String getGamerTag() {return gamerTag;}
     public void setGamerTag(String gamerTag) {this.gamerTag = gamerTag;}
