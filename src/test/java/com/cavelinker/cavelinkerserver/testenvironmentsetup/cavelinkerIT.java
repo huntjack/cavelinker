@@ -1,4 +1,4 @@
-package com.cavelinker.cavelinkerserver;
+package com.cavelinker.cavelinkerserver.testenvironmentsetup;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -12,11 +12,11 @@ import org.testcontainers.utility.DockerImageName;
 import java.nio.file.Paths;
 
 public class cavelinkerIT {
-    private static Network network = Network.newNetwork();
+    protected static Network network = Network.newNetwork();
 
-    static MySQLContainer mysql;
-    static GenericContainer cavelinkerserver;
-    static RequestSpecification requestSpecification;
+    protected static MySQLContainer mysql;
+    protected static GenericContainer cavelinkerserver;
+    protected static RequestSpecification requestSpecification;
 
     @BeforeAll
     static void setup() {
@@ -27,7 +27,7 @@ public class cavelinkerIT {
         cavelinkerserver= new GenericContainer(new ImageFromDockerfile()
                 .withDockerfile(Paths.get("/home/jack/IdeaProjects/cavelinkerserver/Dockerfile")))
                 .withExposedPorts(8080)
-                .waitingFor(Wait.forHttp("/openapi/application.wadl").forStatusCode(200))
+                .waitingFor(Wait.forHttp("/api/application.wadl").forStatusCode(200))
                 .dependsOn(mysql)
                 .withNetwork(network)
                 .withNetworkAliases("cavelinkerserver")
@@ -44,6 +44,6 @@ public class cavelinkerIT {
                 .setBaseUri(baseUri)
                 .build();
 
-        DatabaseSetup.populateUsers(requestSpecification);
+        DatabaseSetup.populateData(requestSpecification);
     }
 }

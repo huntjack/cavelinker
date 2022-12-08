@@ -1,7 +1,8 @@
-package com.cavelinker.cavelinkerserver;
+package com.cavelinker.cavelinkerserver.systemtests;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
 import com.cavelinker.cavelinkerserver.entities.User;
+import com.cavelinker.cavelinkerserver.testenvironmentsetup.cavelinkerIT;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -12,7 +13,7 @@ import static org.hamcrest.Matchers.*;
 public class UserIT extends cavelinkerIT {
 
     @Test
-    public void postHappyPath() {
+    public void postUserHappyPath() {
         User user;
         given(requestSpecification)
                 .header("Content-Type", "application/json")
@@ -28,7 +29,7 @@ public class UserIT extends cavelinkerIT {
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
     @Test
-    public void updateHappyPath() {
+    public void updateUserHappyPath() {
         User user;
         given(requestSpecification)
                 .header("Content-Type", "application/json")
@@ -44,7 +45,7 @@ public class UserIT extends cavelinkerIT {
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
     @Test
-    public void deleteHappyPath() {
+    public void deleteUserHappyPath() {
         given(requestSpecification)
                 .when()
                 .delete("/secured/users/2")

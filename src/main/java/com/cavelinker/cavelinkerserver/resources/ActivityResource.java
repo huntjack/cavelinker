@@ -26,13 +26,6 @@ public class ActivityResource {
     @POST
     public Response createActivity(Activity activity, @PathParam("userId") long userId, @Context UriInfo uriInfo) {
         activity=activityService.createActivity(activity);
-         /*need to set user(from PathParam) on activity side and add activity to activities list on User side using User.AddActivity
-        Prerequisite: UserService needs findUser(User_id userid) method Note:This should be used in other UserService methods too
-        Step 1: Find user with PathParam using UserService
-        Step 2: Call user.addActivity(activity) //added mapping to entities, but not merged yet
-        Step 3: userService.updateUser(user); //change updateUser() to update mapping variables
-        Step 4: activityService.updateActivity(activity); //change updateActivity to update mapping variables
-         */
         User user=userService.findUser(userId);
         user.addActivityBidirectionalMapping(activity);
         userService.saveActivityMappings(user);

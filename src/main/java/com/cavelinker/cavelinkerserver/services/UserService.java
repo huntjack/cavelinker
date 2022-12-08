@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -51,13 +52,14 @@ public class UserService {
     public void deleteActivity(long userId, long activityId) {
         User userToBeUpdated=entityManager.find(User.class, userId);
         entityManager.detach(userToBeUpdated);
-        List<Activity> activityList=userToBeUpdated.getActivities();
-        for(Activity activity: activityList) {
-            if(activity.getActivityId()==activityId) {
-                activityList.remove(activity);
+        List<Activity> oldActivities=userToBeUpdated.getActivities();
+        List<Activity> updatedActivities= new LinkedList<>();
+        for(Activity oldActivity: oldActivities) {
+            if(oldActivity.getActivityId()!=activityId) {
+                updatedActivities.add(oldActivity);
             }
         }
-        userToBeUpdated.setActivities(activityList);
+        userToBeUpdated.setActivities(updatedActivities);
         entityManager.merge(userToBeUpdated);
     }
 
