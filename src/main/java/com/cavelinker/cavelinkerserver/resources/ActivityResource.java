@@ -27,7 +27,7 @@ public class ActivityResource {
     public Response createActivity(Activity activity, @PathParam("userId") long userId, @Context UriInfo uriInfo) {
         activity=activityService.createActivity(activity);
         User user=userService.findUser(userId);
-        user.addActivityBidirectionalMapping(activity);
+        user.addActivity(activity);
         userService.saveActivityMappings(user);
         activityService.saveUserMapping(activity);
         String newId=String.valueOf(activity.getActivityId());
@@ -40,7 +40,7 @@ public class ActivityResource {
     }
     @PUT
     @Path("/{activityId}")
-    public Response updateActivity(@PathParam("activityId") long activityId, Activity activity) {
+    public Response updateActivity(Activity activity, @PathParam("activityId") long activityId) {
         activity.setActivityId(activityId);
         Activity updatedActivity=activityService.updateActivity(activity);
         return Response.ok()
@@ -50,7 +50,7 @@ public class ActivityResource {
     @DELETE
     @Path("/{activityId}")
     public Response deleteActivity(@PathParam("userId")long userId, @PathParam("activityId") long activityId) {
-        userService.deleteActivity(userId, activityId);
+        activityService.deleteActivity(userId, activityId);
         return Response.noContent()
                 .build();
     }

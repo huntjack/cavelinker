@@ -2,15 +2,14 @@ package com.cavelinker.cavelinkerserver.systemtests;
 
 import com.cavelinker.cavelinkerserver.enums.ContactType;
 import com.cavelinker.cavelinkerserver.entities.User;
-import com.cavelinker.cavelinkerserver.testenvironmentsetup.cavelinkerIT;
+import com.cavelinker.cavelinkerserver.testenvironmentsetup.CaveLinkerIT;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.*;
+import io.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
-@Testcontainers
-public class UserIT extends cavelinkerIT {
+public class UserIT extends CaveLinkerIT {
 
     @Test
     public void postUserHappyPath() {

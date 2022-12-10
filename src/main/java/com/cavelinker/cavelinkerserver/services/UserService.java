@@ -48,20 +48,6 @@ public class UserService {
         User user=entityManager.find(User.class, userId);
         entityManager.remove(user);
     }
-    @Transactional
-    public void deleteActivity(long userId, long activityId) {
-        User userToBeUpdated=entityManager.find(User.class, userId);
-        entityManager.detach(userToBeUpdated);
-        List<Activity> oldActivities=userToBeUpdated.getActivities();
-        List<Activity> updatedActivities= new LinkedList<>();
-        for(Activity oldActivity: oldActivities) {
-            if(oldActivity.getActivityId()!=activityId) {
-                updatedActivities.add(oldActivity);
-            }
-        }
-        userToBeUpdated.setActivities(updatedActivities);
-        entityManager.merge(userToBeUpdated);
-    }
 
     public User findUser(long userId) {
         return entityManager.find(User.class, userId);

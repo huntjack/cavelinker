@@ -33,7 +33,7 @@ public class UserResource {
     }
     @PUT
     @Path("secured/users/{userId}")
-    public Response updateUser(@PathParam("userId") long userId, User user) {
+    public Response updateUser(User user, @PathParam("userId") long userId) {
         user.setUserId(userId);
         User updatedUser=userService.updateUser(user);
         return Response.ok()

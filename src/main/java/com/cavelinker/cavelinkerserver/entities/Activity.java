@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @JsonIdentityInfo(
@@ -18,6 +19,8 @@ public class Activity implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long activityId;
+    @Column(unique=true, updatable = false, nullable = false)
+    private String activityBusinessKey;
     private String gamerTag;
     @Enumerated(EnumType.STRING)
     private ActivityType activityType;
@@ -26,13 +29,30 @@ public class Activity implements Serializable {
     private String activityMessage;
     @OneToMany(mappedBy = "activity")
     private List<Schedule> schedules;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId")
     private User user;
 
+    @Override
+    public boolean equals(Object object) {
+        if(this==object){
+            return true;
+        }
+        if(this==null) {
+            return false;
+        }
+        Activity inputActivity=(Activity)object;
+        return Objects.equals(activityBusinessKey, inputActivity.getActivityBusinessKey());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(activityBusinessKey);
+    }
+
     public Activity() {}
-    public Activity(String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage) {
+    public Activity(String gamerTag, String activityBusinessKey, ActivityType activityType, ServerName serverName, String activityMessage) {
         this.gamerTag=gamerTag;
+        this.activityBusinessKey=activityBusinessKey;
         this.activityType=activityType;
         this.serverName=serverName;
         this.activityMessage=activityMessage;
@@ -40,6 +60,8 @@ public class Activity implements Serializable {
 
     public Long getActivityId() {return activityId;}
     public void setActivityId(Long activityId) {this.activityId = activityId;}
+
+    public String getActivityBusinessKey() {return activityBusinessKey;}
 
     public String getGamerTag() {return gamerTag;}
     public void setGamerTag(String gamerTag) {this.gamerTag = gamerTag;}
