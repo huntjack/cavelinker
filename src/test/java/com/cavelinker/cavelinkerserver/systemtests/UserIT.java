@@ -15,27 +15,31 @@ public class UserIT extends CaveLinkerIT {
     public void postUserHappyPath() {
         User user;
         given(requestSpecification)
+                .log().all()
                 .header("Content-Type", "application/json")
-                .body(user = new User("testpost01@gmail.com", ContactType.FACEBOOK, "post1contact"))
+                .body(user = new User("userupdatesuccess@gmail.com", ContactType.FACEBOOK, "userupdatesuccess"))
                 .when()
                 .post("/users")
                 .then()
+                .log().all()
                 .assertThat()
                 .statusCode(201)
                 .header("Content-Type", "application/json")
                 .body("email", equalTo(user.getEmail()))
-                .body("contactType", equalTo(ContactType.FACEBOOK.toString()))
+                .body("contactType", equalTo(user.getContactType().toString()))
                 .body("contactUserName", equalTo(user.getContactUserName()));
     }
     @Test
     public void updateUserHappyPath() {
         User user;
         given(requestSpecification)
+                .log().all()
                 .header("Content-Type", "application/json")
                 .body(user = new User("updatesuccess@gmail.com", ContactType.DISCORD, "newUpdateContact"))
                 .when()
                 .put("/secured/users/1")
                 .then()
+                .log().all()
                 .assertThat()
                 .statusCode(200)
                 .header("Content-Type", "application/json")
@@ -46,9 +50,11 @@ public class UserIT extends CaveLinkerIT {
     @Test
     public void deleteUserHappyPath() {
         given(requestSpecification)
+                .log().all()
                 .when()
                 .delete("/secured/users/2")
                 .then()
+                .log().all()
                 .assertThat()
                 .statusCode(204);
     }

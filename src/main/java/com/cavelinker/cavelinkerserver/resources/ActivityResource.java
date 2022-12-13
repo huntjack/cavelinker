@@ -25,26 +25,34 @@ public class ActivityResource {
 
     @POST
     public Response createActivity(Activity activity, @PathParam("userId") long userId, @Context UriInfo uriInfo) {
-        activity=activityService.createActivity(activity);
-        User user=userService.findUser(userId);
-        user.addActivity(activity);
-        userService.saveActivityMappings(user);
-        activityService.saveUserMapping(activity);
-        String newId=String.valueOf(activity.getActivityId());
+        activity = activityService.createActivity(activity, userId);
+        String newId = String.valueOf(activity.getActivityId());
         URI uri=uriInfo.getAbsolutePathBuilder()
                 .path(newId)
                 .build();
         return Response.created(uri)
                 .entity(activity)
+                .type("application/json")
+                .build();
+    }
+
+    @GET
+    @Path("/{activityId}")
+    public Response getActivity(@PathParam("activityId") long activityId) {
+        Activity activity=activityService.getActivity(activityId);
+        return Response.ok()
+                .entity(activity)
+                .type("application/json")
                 .build();
     }
     @PUT
     @Path("/{activityId}")
-    public Response updateActivity(Activity activity, @PathParam("activityId") long activityId) {
+    public Response updateActivity(Activity activity, @PathParam("activityId") long activityId, @PathParam("userId") long userId) {
         activity.setActivityId(activityId);
-        Activity updatedActivity=activityService.updateActivity(activity);
+        Activity updatedActivity=activityService.updateActivity(activity, userId);
         return Response.ok()
                 .entity(updatedActivity)
+                .type("application/json")
                 .build();
     }
     @DELETE

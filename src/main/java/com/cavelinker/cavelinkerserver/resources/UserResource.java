@@ -31,6 +31,14 @@ public class UserResource {
                 .entity(user)
                 .build();
     }
+    @GET
+    @Path("secured/users/{userId}")
+    public Response getUser(@PathParam("userId") long userId) {
+        User user=userService.getUser(userId);
+        return Response.ok()
+                .entity(user)
+                .build();
+    }
     @PUT
     @Path("secured/users/{userId}")
     public Response updateUser(User user, @PathParam("userId") long userId) {

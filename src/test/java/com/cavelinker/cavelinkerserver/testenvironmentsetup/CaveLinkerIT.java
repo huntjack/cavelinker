@@ -14,7 +14,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.nio.file.Paths;
 
 public abstract class CaveLinkerIT {
-    protected static final Network network = Network.newNetwork();
+    protected static Network network = Network.newNetwork();
     protected static MySQLContainer mysql;
     protected static GenericContainer cavelinkerserver;
     protected static RequestSpecification requestSpecification;
@@ -28,6 +28,7 @@ public abstract class CaveLinkerIT {
                 .withDockerfile(Paths.get("/home/jack/IdeaProjects/cavelinkerserver/Dockerfile")))
                 .withExposedPorts(8080)
                 .waitingFor(Wait.forHttp("/api/application.wadl").forStatusCode(200))
+                //.waitingFor(Wait.forLogMessage(".* Payara Micro .* ready in .*\\s", 1))
                 .dependsOn(mysql)
                 .withNetwork(network)
                 .withNetworkAliases("cavelinkerserver")
@@ -35,12 +36,9 @@ public abstract class CaveLinkerIT {
                 .withEnv("DB_PASSWORD", mysql.getPassword())
                 .withEnv("DB_JDBC_URL", "jdbc:mysql://mysql:3306/" + mysql.getDatabaseName());
 
-
         mysql.start();
         cavelinkerserver.start();
-    }
-    @BeforeAll
-    static void setup() {
+
         String baseUri = "http://" + cavelinkerserver.getHost() + ":" + cavelinkerserver.getMappedPort(8080) +
                 "/api";
         requestSpecification = new RequestSpecBuilder()

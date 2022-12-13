@@ -23,7 +23,7 @@ public class Schedule implements Serializable {
     @Convert(converter = ZoneIdConverter.class)
     private ZoneId userTimeZone;
     @ManyToOne
-    @JoinColumn(name="activity_Id")
+    @JoinColumn(name="activityId")
     private Activity activity;
 
     public Long getScheduleId() {return scheduleId;}

@@ -1,14 +1,10 @@
 package com.cavelinker.cavelinkerserver.services;
 
-import com.cavelinker.cavelinkerserver.entities.Activity;
 import com.cavelinker.cavelinkerserver.entities.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 @ApplicationScoped
@@ -28,29 +24,23 @@ public class UserService {
         return user;
     }
     @Transactional
-    public User saveActivityMappings(User inputUser) {
-        User userToBeUpdated=entityManager.find(User.class, inputUser.getUserId());
-        entityManager.detach(userToBeUpdated);
-        userToBeUpdated.setActivities(inputUser.getActivities());
-        return entityManager.merge(userToBeUpdated);
+    public User getUser(long userId) {
+        return entityManager.find(User.class, userId);
     }
     @Transactional
     public User updateUser(User inputUser) {
         User userToBeUpdated=entityManager.find(User.class, inputUser.getUserId());
-        entityManager.detach(userToBeUpdated);
         userToBeUpdated.setEmail(inputUser.getEmail());
         userToBeUpdated.setContactType(inputUser.getContactType());
         userToBeUpdated.setContactUserName(inputUser.getContactUserName());
-        return entityManager.merge(userToBeUpdated);
+        entityManager.flush();
+        return userToBeUpdated;
     }
     @Transactional
     public void deleteUser(long userId) {
         User user=entityManager.find(User.class, userId);
         entityManager.remove(user);
-    }
-
-    public User findUser(long userId) {
-        return entityManager.find(User.class, userId);
+        entityManager.flush();
     }
 
     public UserService() {}

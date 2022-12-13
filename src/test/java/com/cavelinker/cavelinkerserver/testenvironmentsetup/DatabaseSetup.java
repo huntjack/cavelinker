@@ -10,43 +10,64 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseSetup {
 
-    private static Client client = ClientBuilder.newClient();
+    private static Client client;
+    private static Logger logger;
+
+    static LoggingFeature logging() {
+/*
+        // JUL Root logger to the lowest level, so that bridge can intercept all j.u.l. logs
+        Logger.getLogger("").setLevel(Level.FINEST);
+
+        // Optionally remove existing handlers attached to j.u.l root logger
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+
+        // add SLF4JBridgeHandler to j.u.l's root logger, should be done once during
+        // the initialization phase of your application
+        SLF4JBridgeHandler.install(); */
+        logger = Logger.getLogger(DatabaseSetup.class.getName());
+        return new LoggingFeature(logger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
+    }
     public static void populateData(String baseUri) {
+        client = ClientBuilder.newClient().register(logging());
         WebTarget baseTarget = client.target(baseUri);
         WebTarget userTarget = baseTarget.path("/users");
-        WebTarget activityPostTarget = userTarget.path("{userId}/activities");
+        WebTarget activityPostTarget = baseTarget.path("/secured/users/{userId}/activities");
         //User 1: Test User Update
         Response userResponse1 = userTarget
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new User("testuserupdate@gmail.com", ContactType.INSTAGRAM, "testuserupdate")));
+                .post(Entity.json(new User("userupdate@gmail.com", ContactType.INSTAGRAM, "userupdate")));
         //User 2: Test User Delete
         Response userResponse2 = userTarget
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new User("testuserdelete@gmail.com", ContactType.TWITTER, "testuserdelete")));
+                .post(Entity.json(new User("userdelete@gmail.com", ContactType.TWITTER, "userdelete")));
         //User 3: Test Activity Post
         Response userResponse3 = userTarget
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new User("testactivitypost@gmail.com", ContactType.DISCORD, "testactivitypost")));
+                .post(Entity.json(new User("activitypost@gmail.com", ContactType.DISCORD, "activitypost")));
         //User 4: Test Activity Update
         Response userResponse4 = userTarget
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new User("testactivityupdate@gmail.com", ContactType.INSTAGRAM, "testactivityupdate")));
+                .post(Entity.json(new User("activityupdate@gmail.com", ContactType.INSTAGRAM, "activityupdate")));
         //User 4->Activity 1: Test Activity Update
         Response activityResponse1 = activityPostTarget
                 .resolveTemplate("userId", "4")
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new Activity("testUpdateGamerTag", UUID.randomUUID().toString(), ActivityType.UWU,
-                        ServerName.GAIA, "testUpdateActivityMessage")));
+                .post(Entity.json(new Activity(UUID.randomUUID().toString(),"activityupdate", ActivityType.UWU,
+                        ServerName.GAIA, "activityupdate")));
         //User 5: Test Activity Delete
         Response userResponse5 = userTarget
                 .request()
@@ -57,6 +78,7 @@ public class DatabaseSetup {
                 .resolveTemplate("userId", "5")
                 .request()
                 .header("Content-Type", "application/json")
-                .post(Entity.json(new Activity("testDeleteGamerTag", UUID.randomUUID().toString(), ActivityType.DSU, ServerName.DYNAMIS, "testDeleteActivityMessage")));
+                .post(Entity.json(new Activity(UUID.randomUUID().toString(),"DeleteGamerTag", ActivityType.DSU,
+                        ServerName.DYNAMIS, "DeleteActivityMessage")));
     }
 }

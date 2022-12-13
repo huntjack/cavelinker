@@ -38,10 +38,13 @@ public class Activity implements Serializable {
         if(this==object){
             return true;
         }
-        if(this==null) {
+        if(object==null) {
             return false;
         }
-        Activity inputActivity=(Activity)object;
+        if(getClass() != object.getClass()) {
+            return false;
+        }
+        Activity inputActivity = (Activity)object;
         return Objects.equals(activityBusinessKey, inputActivity.getActivityBusinessKey());
     }
     @Override
@@ -50,9 +53,9 @@ public class Activity implements Serializable {
     }
 
     public Activity() {}
-    public Activity(String gamerTag, String activityBusinessKey, ActivityType activityType, ServerName serverName, String activityMessage) {
-        this.gamerTag=gamerTag;
+    public Activity(String activityBusinessKey, String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage) {
         this.activityBusinessKey=activityBusinessKey;
+        this.gamerTag=gamerTag;
         this.activityType=activityType;
         this.serverName=serverName;
         this.activityMessage=activityMessage;

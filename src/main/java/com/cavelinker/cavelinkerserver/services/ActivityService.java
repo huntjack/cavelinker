@@ -14,39 +14,59 @@ public class ActivityService {
     @PersistenceContext(unitName = "cavelinker_database")
     EntityManager entityManager;
     @Transactional
-    public Activity createActivity(Activity activity) {
-        entityManager.persist(activity);
-        entityManager.flush();
-        return activity;
-    }
-    @Transactional
-    public Activity saveUserMapping(Activity inputActivity) {
-        Activity activityToBeUpdated = entityManager.find(Activity.class, inputActivity.getActivityId());
-        entityManager.detach(activityToBeUpdated);
-        activityToBeUpdated.setUser(inputActivity.getUser());
-        return entityManager.merge(activityToBeUpdated);
-    }
-    @Transactional
-    public Activity updateActivity(Activity inputActivity) {
-        Activity activityToBeUpdated = entityManager.find(Activity.class, inputActivity.getActivityId());
-        User user = entityManager.find(User.class, activityToBeUpdated.getUser().getUserId());
+    public Activity createActivity(Activity activity, long userId) {
+        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
+                .setParameter("userId", userId)
+                .getSingleResult();
         entityManager.detach(user);
-        List<Activity> activities=user.getActivities();
-        int activityIndex=activities.indexOf(inputActivity);
-        if(activities.contains(inputActivity)) {
-            activities.set(activityIndex, inputActivity);
-        }
-        user.setActivities(activities);
+        user.addActivity(activity);
+        user = entityManager.merge(user);
+        entityManager.flush();
+        int activityIndex = user.getActivities().indexOf(activity);
+        return user.getActivities().get(activityIndex);
+    }
+    @Transactional
+    public Activity getActivity(long activityId) {
+        return entityManager.find(Activity.class, activityId);
+    }
+    @Transactional
+    public Activity updateActivity(Activity inputActivity, long userId) {
+        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
+                .setParameter("userId", userId)
+                .getSingleResult();
+        entityManager.detach(user);
+        int activityIndex = user.getActivities().indexOf(inputActivity);
+        user.getActivities()
+                .get(activityIndex)
+                .setGamerTag(inputActivity.getGamerTag());
+        user.getActivities()
+                .get(activityIndex)
+                .setActivityType(inputActivity.getActivityType());
+        user.getActivities()
+                .get(activityIndex)
+                .setServerName(inputActivity.getServerName());
+        user.getActivities()
+                .get(user.getActivities().indexOf(inputActivity))
+                .setActivityMessage(inputActivity.getActivityMessage());
         entityManager.merge(user);
-        return activities.get(activityIndex);
+        entityManager.flush();
+        return user
+                .getActivities()
+                .get(activityIndex);
     }
     @Transactional
     public void deleteActivity(long userId, long activityId) {
-        User userToBeUpdated = entityManager.find(User.class, userId);
-        Activity activityToBeRemoved = entityManager.find(Activity.class, activityId);
-        entityManager.detach(userToBeUpdated);
-        userToBeUpdated.removeActivity(activityToBeRemoved);
-        entityManager.merge(userToBeUpdated);
+        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
+                .setParameter("userId", userId)
+                .getSingleResult();
+        Activity activity = entityManager.find(Activity.class, activityId);
+        entityManager.detach(user);
+        int activityIndex = user.getActivities().indexOf(activity);
+        user.removeActivity(
+                user.getActivities()
+                        .get(activityIndex));
+        entityManager.merge(user);
+        entityManager.flush();
     }
     public ActivityService() {}
 }

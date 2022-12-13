@@ -13,8 +13,8 @@ import java.util.Objects;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "userId")
-@NamedQuery(name="findUserByEmail",
-        query="SELECT DISTINCT user FROM User user WHERE user.email= :email")
+@NamedQuery(name="getUserWithActivities",
+        query="SELECT user FROM User user JOIN FETCH user.activities WHERE user.userId = :userId")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -26,22 +26,26 @@ public class User implements Serializable {
     private ContactType contactType;
     private String contactUserName;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
     private List<Activity> activities;
 
     public void addActivity(Activity activity) {
-        this.activities.add(activity);
         activity.setUser(this);
+        activities.add(activity);
     }
     public void removeActivity(Activity activity) {
-        this.activities.remove(activity);
+        activities.remove(activity);
+        activity.setUser(null);
     }
     @Override
     public boolean equals(Object object) {
         if(this==object){
             return true;
         }
-        if(this==null) {
+        if(object==null) {
+            return false;
+        }
+        if(getClass() != object.getClass()) {
             return false;
         }
         User inputUser=(User)object;
