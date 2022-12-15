@@ -1,6 +1,10 @@
 package com.cavelinker.cavelinkerserver.services;
 
+import com.cavelinker.cavelinkerserver.entities.Activity;
 import com.cavelinker.cavelinkerserver.entities.Schedule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,25 +14,59 @@ import jakarta.transaction.Transactional;
 public class ScheduleService {
     @PersistenceContext(unitName = "cavelinker_database")
     EntityManager entityManager;
-    @Transactional
-    public Schedule createSchedule(Schedule schedule) {
-        entityManager.persist(schedule);
+
+    private static ObjectMapper mapper;
+
+    static {
+        mapper = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .build();
+    }
+    @Transactional(rollbackOn={Exception.class})
+    public Schedule createSchedule(Schedule schedule, long activityId) {
+        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
+                .setParameter("activityId", activityId)
+                .getSingleResult();
+        entityManager.detach(activity);
+        activity.addSchedule(schedule);
+        activity = entityManager.merge(activity);
         entityManager.flush();
-        return schedule;
+        int scheduleIndex = activity.getSchedules().indexOf(schedule);
+        return activity.getSchedules().get(scheduleIndex);
     }
-    @Transactional
-    public Schedule updateSchedule(Schedule inputSchedule) {
-        Schedule scheduleToBeUpdated=entityManager.find(Schedule.class, inputSchedule.getScheduleId());
-        entityManager.detach(scheduleToBeUpdated);
-        scheduleToBeUpdated.setStartTimeUtc(inputSchedule.getStartTimeUtc());
-        scheduleToBeUpdated.setEndTimeUtc(inputSchedule.getEndTimeUtc());
-        scheduleToBeUpdated.setUserTimeZone(inputSchedule.getUserTimeZone());
-        return entityManager.merge(scheduleToBeUpdated);
+    @Transactional(rollbackOn={Exception.class})
+    public Schedule updateSchedule(Schedule inputSchedule, long activityId) {
+        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
+                .setParameter("activityId", activityId)
+                .getSingleResult();
+        entityManager.detach(activity);
+        int scheduleIndex = activity.getSchedules().indexOf(inputSchedule);
+        activity.getSchedules()
+                .get(scheduleIndex)
+                .setStartTimeUtc(inputSchedule.getStartTimeUtc());
+        activity.getSchedules()
+                .get(scheduleIndex)
+                .setEndTimeUtc(inputSchedule.getEndTimeUtc());
+        activity.getSchedules()
+                .get(scheduleIndex)
+                .setUserTimeZone(inputSchedule.getUserTimeZone());
+        entityManager.merge(activity);
+        entityManager.flush();
+        return activity
+                .getSchedules()
+                .get(scheduleIndex);
     }
-    @Transactional
-    public void deleteSchedule(long scheduleId) {
-        Schedule schedule=entityManager.find(Schedule.class, scheduleId);
-        entityManager.remove(schedule);
+    @Transactional(rollbackOn={Exception.class})
+    public void deleteSchedule(long scheduleId, long activityId) {
+        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
+                .setParameter("activityId", activityId)
+                .getSingleResult();
+        Schedule schedule = entityManager.find(Schedule.class, scheduleId);
+        int scheduleIndex = activity.getSchedules().indexOf(schedule);
+        activity.removeSchedule(
+                activity.getSchedules()
+                        .get(scheduleIndex));
+        entityManager.flush();
     }
     public ScheduleService() {}
 }

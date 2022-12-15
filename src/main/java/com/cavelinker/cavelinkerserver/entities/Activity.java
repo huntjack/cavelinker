@@ -14,10 +14,12 @@ import java.util.Objects;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "activityId")
+@NamedQuery(name="getActivityWithSchedules",
+        query="SELECT activity FROM Activity activity JOIN FETCH activity.schedules WHERE activity.activityId = :activityId")
 public class Activity implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
+    @Column(unique = true, updatable = false, nullable = false)
     private Long activityId;
     @Column(unique=true, updatable = false, nullable = false)
     private String activityBusinessKey;
@@ -27,11 +29,20 @@ public class Activity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ServerName serverName;
     private String activityMessage;
-    @OneToMany(mappedBy = "activity")
+    @OneToMany(mappedBy = "activity", cascade = {CascadeType.DETACH, CascadeType.MERGE},  orphanRemoval = true)
     private List<Schedule> schedules;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userId")
     private User user;
+
+    public void addSchedule(Schedule schedule) {
+        schedule.setActivity(this);
+        schedules.add(schedule);
+    }
+    public void removeSchedule(Schedule schedule) {
+        schedules.remove(schedule);
+        schedule.setActivity(null);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -52,7 +63,6 @@ public class Activity implements Serializable {
         return Objects.hashCode(activityBusinessKey);
     }
 
-    public Activity() {}
     public Activity(String activityBusinessKey, String gamerTag, ActivityType activityType, ServerName serverName, String activityMessage) {
         this.activityBusinessKey=activityBusinessKey;
         this.gamerTag=gamerTag;
@@ -60,6 +70,7 @@ public class Activity implements Serializable {
         this.serverName=serverName;
         this.activityMessage=activityMessage;
     }
+    public Activity() {}
 
     public Long getActivityId() {return activityId;}
     public void setActivityId(Long activityId) {this.activityId = activityId;}
@@ -80,4 +91,7 @@ public class Activity implements Serializable {
 
     public User getUser() {return user;}
     public void setUser(User user) {this.user = user;}
+
+    public List<Schedule> getSchedules() {return schedules;}
+    public void setSchedules(List<Schedule> schedules) {this.schedules = schedules;}
 }

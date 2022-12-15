@@ -11,7 +11,6 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.logging.LoggingFeature;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -23,16 +22,6 @@ public class DatabaseSetup {
     private static Logger logger;
 
     static LoggingFeature logging() {
-/*
-        // JUL Root logger to the lowest level, so that bridge can intercept all j.u.l. logs
-        Logger.getLogger("").setLevel(Level.FINEST);
-
-        // Optionally remove existing handlers attached to j.u.l root logger
-        SLF4JBridgeHandler.removeHandlersForRootLogger();
-
-        // add SLF4JBridgeHandler to j.u.l's root logger, should be done once during
-        // the initialization phase of your application
-        SLF4JBridgeHandler.install(); */
         logger = Logger.getLogger(DatabaseSetup.class.getName());
         return new LoggingFeature(logger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
     }

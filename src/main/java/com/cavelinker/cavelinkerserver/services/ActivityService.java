@@ -7,13 +7,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
-import java.util.List;
-
 @ApplicationScoped
 public class ActivityService {
     @PersistenceContext(unitName = "cavelinker_database")
     EntityManager entityManager;
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public Activity createActivity(Activity activity, long userId) {
         User user = (User) entityManager.createNamedQuery("getUserWithActivities")
                 .setParameter("userId", userId)
@@ -29,7 +27,7 @@ public class ActivityService {
     public Activity getActivity(long activityId) {
         return entityManager.find(Activity.class, activityId);
     }
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public Activity updateActivity(Activity inputActivity, long userId) {
         User user = (User) entityManager.createNamedQuery("getUserWithActivities")
                 .setParameter("userId", userId)
@@ -46,7 +44,7 @@ public class ActivityService {
                 .get(activityIndex)
                 .setServerName(inputActivity.getServerName());
         user.getActivities()
-                .get(user.getActivities().indexOf(inputActivity))
+                .get(activityIndex)
                 .setActivityMessage(inputActivity.getActivityMessage());
         entityManager.merge(user);
         entityManager.flush();
@@ -54,18 +52,16 @@ public class ActivityService {
                 .getActivities()
                 .get(activityIndex);
     }
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public void deleteActivity(long userId, long activityId) {
         User user = (User) entityManager.createNamedQuery("getUserWithActivities")
                 .setParameter("userId", userId)
                 .getSingleResult();
         Activity activity = entityManager.find(Activity.class, activityId);
-        entityManager.detach(user);
         int activityIndex = user.getActivities().indexOf(activity);
         user.removeActivity(
                 user.getActivities()
                         .get(activityIndex));
-        entityManager.merge(user);
         entityManager.flush();
     }
     public ActivityService() {}

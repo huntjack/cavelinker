@@ -17,7 +17,7 @@ public class UserService {
     public long authenticateUser(String userName, String userPassword) {
         //write JPQL query that finds user via userName, checks that userPassword equals the password in the DB and returns userID
     } */
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public User createUser(User user) {
         entityManager.persist(user);
         entityManager.flush();
@@ -27,16 +27,15 @@ public class UserService {
     public User getUser(long userId) {
         return entityManager.find(User.class, userId);
     }
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public User updateUser(User inputUser) {
         User userToBeUpdated=entityManager.find(User.class, inputUser.getUserId());
-        userToBeUpdated.setEmail(inputUser.getEmail());
         userToBeUpdated.setContactType(inputUser.getContactType());
         userToBeUpdated.setContactUserName(inputUser.getContactUserName());
         entityManager.flush();
         return userToBeUpdated;
     }
-    @Transactional
+    @Transactional(rollbackOn={Exception.class})
     public void deleteUser(long userId) {
         User user=entityManager.find(User.class, userId);
         entityManager.remove(user);

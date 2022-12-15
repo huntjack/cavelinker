@@ -2,6 +2,7 @@ package com.cavelinker.cavelinkerserver.resources;
 
 import com.cavelinker.cavelinkerserver.entities.User;
 import com.cavelinker.cavelinkerserver.services.UserService;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -12,6 +13,7 @@ import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("/")
+@RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -29,6 +31,7 @@ public class UserResource {
                 .build();
         return Response.created(uri)
                 .entity(user)
+                .type("application/json")
                 .build();
     }
     @GET
@@ -37,6 +40,7 @@ public class UserResource {
         User user=userService.getUser(userId);
         return Response.ok()
                 .entity(user)
+                .type("application/json")
                 .build();
     }
     @PUT
@@ -46,6 +50,7 @@ public class UserResource {
         User updatedUser=userService.updateUser(user);
         return Response.ok()
                 .entity(updatedUser)
+                .type("application/json")
                 .build();
     }
     @DELETE

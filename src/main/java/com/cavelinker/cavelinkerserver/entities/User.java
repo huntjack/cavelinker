@@ -18,7 +18,7 @@ import java.util.Objects;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
+    @Column(unique = true, updatable = false, nullable = false)
     private Long userId;
     @Column(unique=true, updatable = false, nullable = false)
     private String email;
@@ -26,7 +26,7 @@ public class User implements Serializable {
     private ContactType contactType;
     private String contactUserName;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE},  orphanRemoval = true)
     private List<Activity> activities;
 
     public void addActivity(Activity activity) {
@@ -55,12 +55,12 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hashCode(email);
     }
-    public User(){}
     public User(String email, ContactType contactType, String contactUserName) {
         this.email=email;
         this.contactType=contactType;
         this.contactUserName=contactUserName;
     }
+    public User(){}
 
     public Long getUserId() {return userId;}
     public void setUserId(Long userId) {this.userId = userId;}

@@ -35,7 +35,7 @@ public class UserIT extends CaveLinkerIT {
         given(requestSpecification)
                 .log().all()
                 .header("Content-Type", "application/json")
-                .body(user = new User("updatesuccess@gmail.com", ContactType.DISCORD, "newUpdateContact"))
+                .body(user = new User("userupdate@gmail.com", ContactType.DISCORD, "updatedContact"))
                 .when()
                 .put("/secured/users/1")
                 .then()
