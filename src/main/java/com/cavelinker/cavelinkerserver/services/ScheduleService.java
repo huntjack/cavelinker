@@ -34,6 +34,10 @@ public class ScheduleService {
         int scheduleIndex = activity.getSchedules().indexOf(schedule);
         return activity.getSchedules().get(scheduleIndex);
     }
+    @Transactional
+    public Schedule getSchedule(long scheduleId) {
+        return entityManager.find(Schedule.class, scheduleId);
+    }
     @Transactional(rollbackOn={Exception.class})
     public Schedule updateSchedule(Schedule inputSchedule, long activityId) {
         Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")

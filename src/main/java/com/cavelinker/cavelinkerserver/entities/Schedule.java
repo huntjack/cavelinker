@@ -1,6 +1,5 @@
 package com.cavelinker.cavelinkerserver.entities;
 
-//import com.cavelinker.cavelinkerserver.converters.ZoneIdConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -13,7 +12,8 @@ import java.util.Objects;
 @Entity
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "scheduleId")
+        property = "scheduleId",
+        scope= Schedule.class)
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

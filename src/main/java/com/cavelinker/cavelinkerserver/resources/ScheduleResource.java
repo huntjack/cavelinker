@@ -43,6 +43,15 @@ public class ScheduleResource {
                 .type("application/json")
                 .build();
     }
+    @GET
+    @Path("/{scheduleId}")
+    public Response getSchedule(@PathParam("scheduleId") long scheduleId) {
+        Schedule schedule = scheduleService.getSchedule(scheduleId);
+        return Response.ok()
+                .entity(schedule)
+                .type("application/json")
+                .build();
+    }
     @PUT
     @Path("/{scheduleId}")
     public Response updateSchedule(Schedule schedule, @PathParam("scheduleId") long scheduleId, @PathParam("activityId") long activityId) {

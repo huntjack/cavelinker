@@ -13,7 +13,8 @@ import java.util.Objects;
 @Entity
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "activityId")
+        property = "activityId",
+        scope = Activity.class)
 @NamedQuery(name="getActivityWithSchedules",
         query="SELECT activity FROM Activity activity JOIN FETCH activity.schedules WHERE activity.activityId = :activityId")
 public class Activity implements Serializable {

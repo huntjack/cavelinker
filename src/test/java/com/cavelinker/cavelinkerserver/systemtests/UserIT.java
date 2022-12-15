@@ -17,7 +17,7 @@ public class UserIT extends CaveLinkerIT {
         given(requestSpecification)
                 .log().all()
                 .header("Content-Type", "application/json")
-                .body(user = new User("userupdatesuccess@gmail.com", ContactType.FACEBOOK, "userupdatesuccess"))
+                .body(user = new User("userpost@gmail.com", ContactType.FACEBOOK, "userpost"))
                 .when()
                 .post("/users")
                 .then()

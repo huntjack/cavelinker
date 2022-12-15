@@ -12,7 +12,8 @@ import java.util.Objects;
 @Entity
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "userId")
+        property = "userId",
+        scope = User.class)
 @NamedQuery(name="getUserWithActivities",
         query="SELECT user FROM User user JOIN FETCH user.activities WHERE user.userId = :userId")
 public class User implements Serializable {

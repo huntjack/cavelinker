@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.*;
 import static io.restassured.matcher.RestAssuredMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class ActivityIT extends CaveLinkerIT {
@@ -55,11 +54,11 @@ public class ActivityIT extends CaveLinkerIT {
                         .body("activityMessage", equalTo("activityupdate"))
                         .extract()
                         .response();
-
+        //Get random activityBusinessKey from response
         String responseBody = response.getBody().asString();
         JsonPath jsonPathEvaluator = new JsonPath(responseBody);
-
         String updateActivityBusinessKey= jsonPathEvaluator.getString("activityBusinessKey");
+
         Activity updateActivity;
         given(requestSpecification)
                 .log().all()
