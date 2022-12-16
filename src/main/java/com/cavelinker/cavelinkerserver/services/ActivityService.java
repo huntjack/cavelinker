@@ -13,9 +13,7 @@ public class ActivityService {
     EntityManager entityManager;
     @Transactional(rollbackOn={Exception.class})
     public Activity createActivity(Activity activity, long userId) {
-        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
-                .setParameter("userId", userId)
-                .getSingleResult();
+        User user = getUserWithActivities(userId);
         entityManager.detach(user);
         user.addActivity(activity);
         user = entityManager.merge(user);
@@ -23,15 +21,20 @@ public class ActivityService {
         int activityIndex = user.getActivities().indexOf(activity);
         return user.getActivities().get(activityIndex);
     }
+    @Transactional(rollbackOn={Exception.class})
+    private User getUserWithActivities(long userId) {
+        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return user;
+    }
     @Transactional
     public Activity getActivity(long activityId) {
         return entityManager.find(Activity.class, activityId);
     }
     @Transactional(rollbackOn={Exception.class})
     public Activity updateActivity(Activity inputActivity, long userId) {
-        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
-                .setParameter("userId", userId)
-                .getSingleResult();
+        User user = getUserWithActivities(userId);
         entityManager.detach(user);
         int activityIndex = user.getActivities().indexOf(inputActivity);
         user.getActivities()
@@ -54,9 +57,7 @@ public class ActivityService {
     }
     @Transactional(rollbackOn={Exception.class})
     public void deleteActivity(long userId, long activityId) {
-        User user = (User) entityManager.createNamedQuery("getUserWithActivities")
-                .setParameter("userId", userId)
-                .getSingleResult();
+        User user = getUserWithActivities(userId);
         Activity activity = entityManager.find(Activity.class, activityId);
         int activityIndex = user.getActivities().indexOf(activity);
         user.removeActivity(

@@ -24,9 +24,7 @@ public class ScheduleService {
     }
     @Transactional(rollbackOn={Exception.class})
     public Schedule createSchedule(Schedule schedule, long activityId) {
-        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
-                .setParameter("activityId", activityId)
-                .getSingleResult();
+        Activity activity = getActivityWithSchedules(activityId);
         entityManager.detach(activity);
         activity.addSchedule(schedule);
         activity = entityManager.merge(activity);
@@ -34,15 +32,20 @@ public class ScheduleService {
         int scheduleIndex = activity.getSchedules().indexOf(schedule);
         return activity.getSchedules().get(scheduleIndex);
     }
+    @Transactional(rollbackOn={Exception.class})
+    private Activity getActivityWithSchedules(long activityId) {
+        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
+                .setParameter("activityId", activityId)
+                .getSingleResult();
+        return activity;
+    }
     @Transactional
     public Schedule getSchedule(long scheduleId) {
         return entityManager.find(Schedule.class, scheduleId);
     }
     @Transactional(rollbackOn={Exception.class})
     public Schedule updateSchedule(Schedule inputSchedule, long activityId) {
-        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
-                .setParameter("activityId", activityId)
-                .getSingleResult();
+        Activity activity = getActivityWithSchedules(activityId);
         entityManager.detach(activity);
         int scheduleIndex = activity.getSchedules().indexOf(inputSchedule);
         activity.getSchedules()
@@ -62,9 +65,7 @@ public class ScheduleService {
     }
     @Transactional(rollbackOn={Exception.class})
     public void deleteSchedule(long scheduleId, long activityId) {
-        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
-                .setParameter("activityId", activityId)
-                .getSingleResult();
+        Activity activity = getActivityWithSchedules(activityId);
         Schedule schedule = entityManager.find(Schedule.class, scheduleId);
         int scheduleIndex = activity.getSchedules().indexOf(schedule);
         activity.removeSchedule(
