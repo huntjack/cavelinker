@@ -8,7 +8,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class ScheduleService {
@@ -24,6 +31,7 @@ public class ScheduleService {
     }
     @Transactional(rollbackOn={Exception.class})
     public Schedule createSchedule(Schedule schedule, long activityId) {
+        convertToUtc(schedule);
         Activity activity = getActivityWithSchedules(activityId);
         entityManager.detach(activity);
         activity.addSchedule(schedule);
@@ -32,12 +40,24 @@ public class ScheduleService {
         int scheduleIndex = activity.getSchedules().indexOf(schedule);
         return activity.getSchedules().get(scheduleIndex);
     }
+    private void convertToUtc(Schedule schedule) {
+        ZonedDateTime unconvertedLocalStartTime = schedule.getStartTimeUtc()
+                .atZone(schedule.getUserTimeZone());
+        ZonedDateTime unconvertedLocalEndTime = schedule.getEndTimeUtc()
+                .atZone(schedule.getUserTimeZone());
+        ZonedDateTime convertedUtcStartTime = unconvertedLocalStartTime
+                .withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime convertedUtcEndTime = unconvertedLocalEndTime
+                .withZoneSameInstant(ZoneId.of("UTC"));
+        schedule.setStartTimeUtc(convertedUtcStartTime.toLocalDateTime());
+        schedule.setEndTimeUtc(convertedUtcEndTime.toLocalDateTime());
+    }
     @Transactional(rollbackOn={Exception.class})
-    private Activity getActivityWithSchedules(long activityId) {
-        Activity activity = (Activity) entityManager.createNamedQuery("getActivityWithSchedules")
-                .setParameter("activityId", activityId)
-                .getSingleResult();
-        return activity;
+    public Activity getActivityWithSchedules(long activityId) {
+        TypedQuery<Activity> typedQuery = entityManager.createNamedQuery("getActivityWithSchedules", Activity.class)
+                .setParameter("activityId", activityId);
+
+        return typedQuery.getSingleResult();
     }
     @Transactional
     public Schedule getSchedule(long scheduleId) {
@@ -45,6 +65,7 @@ public class ScheduleService {
     }
     @Transactional(rollbackOn={Exception.class})
     public Schedule updateSchedule(Schedule inputSchedule, long activityId) {
+        convertToUtc(inputSchedule);
         Activity activity = getActivityWithSchedules(activityId);
         entityManager.detach(activity);
         int scheduleIndex = activity.getSchedules().indexOf(inputSchedule);

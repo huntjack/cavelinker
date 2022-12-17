@@ -4,6 +4,7 @@ import com.cavelinker.cavelinkerserver.entities.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 
@@ -22,6 +23,13 @@ public class UserService {
         entityManager.persist(user);
         entityManager.flush();
         return user;
+    }
+    @Transactional(rollbackOn={Exception.class})
+    public User getUserWithActivities(long userId) {
+        TypedQuery<User> typedQuery = entityManager.createNamedQuery("getUserWithActivities", User.class)
+                .setParameter("userId", userId);
+
+        return typedQuery.getSingleResult();
     }
     @Transactional
     public User getUser(long userId) {

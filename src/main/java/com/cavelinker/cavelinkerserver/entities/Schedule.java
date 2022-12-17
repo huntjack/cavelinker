@@ -14,6 +14,10 @@ import java.util.Objects;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "scheduleId",
         scope= Schedule.class)
+@NamedQuery(name="findMatchingSchedules",
+        query="SELECT schedule FROM Schedule schedule " +
+                "WHERE schedule.startTimeUtc <= :oneHourLessThanEndTime AND " +
+                "schedule.endTimeUtc >= :oneHourMoreThanStartTime")
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

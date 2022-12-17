@@ -16,7 +16,16 @@ import java.util.Objects;
         property = "activityId",
         scope = Activity.class)
 @NamedQuery(name="getActivityWithSchedules",
-        query="SELECT activity FROM Activity activity JOIN FETCH activity.schedules WHERE activity.activityId = :activityId")
+        query="SELECT activity FROM Activity activity " +
+                "JOIN FETCH activity.schedules " +
+                "WHERE activity.activityId = :activityId")
+@NamedQuery(name = "findMatchingActivities",
+        query = "SELECT activity FROM Activity activity, " +
+        "IN (activity.schedules) schedule " +
+        "WHERE activity.activityType = :activityType AND " +
+        "activity.serverName = :serverName AND " +
+        "schedule.startTimeUtc <= :oneHourLessThanEndTime AND " +
+        "schedule.endTimeUtc >= :oneHourMoreThanStartTime")
 public class Activity implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
