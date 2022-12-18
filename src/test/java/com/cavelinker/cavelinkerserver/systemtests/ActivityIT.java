@@ -4,8 +4,7 @@ import com.cavelinker.cavelinkerserver.entities.Activity;
 import com.cavelinker.cavelinkerserver.enums.ActivityType;
 import com.cavelinker.cavelinkerserver.enums.ServerName;
 import com.cavelinker.cavelinkerserver.testenvironmentsetup.CaveLinkerIT;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
+import com.cavelinker.cavelinkerserver.testenvironmentsetup.DatabaseSetup;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
@@ -37,28 +36,10 @@ public class ActivityIT extends CaveLinkerIT {
     }
 
     @Test
-    public void getAndUpdateActivityHappyPath() {
-        Response response=
-                given(requestSpecification)
-                        .log().all()
-                        .when()
-                        .get("/secured/users/4/activities/1")
-                        .then()
-                        .log().all()
-                        .assertThat()
-                        .statusCode(200)
-                        .header("Content-Type", "application/json")
-                        .body("gamerTag", equalTo("activityupdate"))
-                        .body("activityType", equalTo(ActivityType.UWU.toString()))
-                        .body("serverName", equalTo(ServerName.GAIA.toString()))
-                        .body("activityMessage", equalTo("activityupdate"))
-                        .extract()
-                        .response();
-        //Get random activityBusinessKey from response
-        String responseBody = response.getBody().asString();
-        JsonPath jsonPathEvaluator = new JsonPath(responseBody);
-        String updateActivityBusinessKey= jsonPathEvaluator.getString("activityBusinessKey");
-
+    public void updateActivityHappyPath() {
+        String updateActivityBusinessKey =
+                DatabaseSetup.getActivity1()
+                .getActivityBusinessKey();
         Activity updateActivity;
         given(requestSpecification)
                 .log().all()

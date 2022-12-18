@@ -23,14 +23,6 @@ public class ScheduleResource {
     @Inject
     private ScheduleService scheduleService;
 
-    private static ObjectMapper mapper;
-
-    static {
-        mapper = JsonMapper.builder()
-                .addModule(new JavaTimeModule())
-                .build();
-    }
-
     @POST
     public Response createSchedule(Schedule schedule, @PathParam("activityId") long activityId, @Context UriInfo uriInfo) {
         schedule = scheduleService.createSchedule(schedule, activityId);

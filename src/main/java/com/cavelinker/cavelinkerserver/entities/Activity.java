@@ -20,8 +20,8 @@ import java.util.Objects;
                 "JOIN FETCH activity.schedules " +
                 "WHERE activity.activityId = :activityId")
 @NamedQuery(name = "findMatchingActivities",
-        query = "SELECT activity FROM Activity activity, " +
-        "IN (activity.schedules) schedule " +
+        query = "SELECT activity FROM Activity activity " +
+        "JOIN activity.schedules schedule " +
         "WHERE activity.activityType = :activityType AND " +
         "activity.serverName = :serverName AND " +
         "schedule.startTimeUtc <= :oneHourLessThanEndTime AND " +

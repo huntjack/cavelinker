@@ -2,7 +2,7 @@ package com.cavelinker.cavelinkerserver.systemtests;
 
 import com.cavelinker.cavelinkerserver.entities.Schedule;
 import com.cavelinker.cavelinkerserver.testenvironmentsetup.CaveLinkerIT;
-import io.restassured.path.json.JsonPath;
+import com.cavelinker.cavelinkerserver.testenvironmentsetup.DatabaseSetup;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
@@ -42,36 +42,15 @@ public class ScheduleIT extends CaveLinkerIT {
 
         ResponseBody responseBody = response.getBody();
         Schedule scheduleResponse = responseBody.as(Schedule.class);
-        assertEquals(postScheduleBusinessKey, scheduleResponse.getScheduleBusinessKey());
+        postSchedule.convertToUtc();
+        assertEquals(postSchedule.getScheduleBusinessKey(), scheduleResponse.getScheduleBusinessKey());
         assertEquals(postSchedule.getStartTimeUtc(), scheduleResponse.getStartTimeUtc());
         assertEquals(postSchedule.getEndTimeUtc(), scheduleResponse.getEndTimeUtc());
         assertEquals(postSchedule.getUserTimeZone(), scheduleResponse.getUserTimeZone());
     }
     @Test
-    public void getAndUpdateScheduleHappyPath() {
-        Response initialResponse =
-                given(requestSpecification)
-                        .log().all()
-                        .when()
-                        .get("/secured/users/7/activities/4/schedules/1")
-                        .then()
-                        .log().all()
-                        .assertThat()
-                        .statusCode(200)
-                        .header("Content-Type", "application/json")
-                        .extract()
-                        .response();
-        //Check GET Response
-        ResponseBody initialResponseBody = initialResponse.getBody();
-        Schedule initialSchedule = initialResponseBody.as(Schedule.class);
-        assertEquals(LocalDateTime.of(2022, Month.DECEMBER, 19, 16, 0), initialSchedule.getStartTimeUtc());
-        assertEquals(LocalDateTime.of(2022, Month.DECEMBER, 19, 21, 0), initialSchedule.getEndTimeUtc());
-        assertEquals(ZoneId.of("America/Los_Angeles"), initialSchedule.getUserTimeZone());
-        //Get random scheduleBusinessKey from response
-        String responseBody = initialResponseBody.asString();
-        JsonPath jsonPathEvaluator = new JsonPath(responseBody);
-        String updateScheduleBusinessKey = jsonPathEvaluator.getString("scheduleBusinessKey");
-
+    public void updateScheduleHappyPath() {
+        String updateScheduleBusinessKey = DatabaseSetup.getSchedule1().getScheduleBusinessKey();
         Schedule inputSchedule;
         Response updatedResponse =
         given(requestSpecification)
@@ -92,6 +71,7 @@ public class ScheduleIT extends CaveLinkerIT {
                 .response();
         ResponseBody updatedResponseBody = updatedResponse.getBody();
         Schedule updatedSchedule = updatedResponseBody.as(Schedule.class);
+        inputSchedule.convertToUtc();
         assertEquals(inputSchedule.getScheduleBusinessKey(), updatedSchedule.getScheduleBusinessKey());
         assertEquals(inputSchedule.getStartTimeUtc(), updatedSchedule.getStartTimeUtc());
         assertEquals(inputSchedule.getEndTimeUtc(), updatedSchedule.getEndTimeUtc());

@@ -5,12 +5,11 @@ import com.cavelinker.cavelinkerserver.services.ActivityService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
 
 @Path("/secured/users/{userId}/activities")
 @RequestScoped
@@ -35,10 +34,11 @@ public class ActivityResource {
 
     @GET
     @Path("/{activityId}")
-    public Response getActivity(@PathParam("activityId") long activityId) {
-        Activity activity = activityService.getActivity(activityId);
+    public Response findMatchingActivities(@PathParam("activityId") long activityId) {
+        Set<Activity> activities = activityService.findMatchingActivities(activityId);
+        GenericEntity<Set<Activity>> entities = new GenericEntity<>(activities){};
         return Response.ok()
-                .entity(activity)
+                .entity(entities)
                 .type("application/json")
                 .build();
     }

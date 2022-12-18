@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -32,6 +33,19 @@ public class Schedule implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="activityId")
     private Activity activity;
+
+    public void convertToUtc() {
+        ZonedDateTime unconvertedLocalStartTime = this.getStartTimeUtc()
+                .atZone(this.getUserTimeZone());
+        ZonedDateTime unconvertedLocalEndTime = this.getEndTimeUtc()
+                .atZone(this.getUserTimeZone());
+        ZonedDateTime convertedUtcStartTime = unconvertedLocalStartTime
+                .withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime convertedUtcEndTime = unconvertedLocalEndTime
+                .withZoneSameInstant(ZoneId.of("UTC"));
+        this.setStartTimeUtc(convertedUtcStartTime.toLocalDateTime());
+        this.setEndTimeUtc(convertedUtcEndTime.toLocalDateTime());
+    }
 
     @Override
     public boolean equals(Object object) {

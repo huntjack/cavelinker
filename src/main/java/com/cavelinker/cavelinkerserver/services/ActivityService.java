@@ -38,8 +38,8 @@ public class ActivityService {
    public Activity getActivity(long activityId) {
         return entityManager.find(Activity.class, activityId);
    }
-    @Transactional
-    public Set<Activity> findMatchingActivities(long activityId) {
+   @Transactional
+   public Set<Activity> findMatchingActivities(long activityId) {
         TypedQuery<Activity> activityTypedQuery = entityManager.createNamedQuery("getActivityWithSchedules", Activity.class)
                 .setParameter("activityId", activityId);
         Activity activity = activityTypedQuery.getSingleResult();
