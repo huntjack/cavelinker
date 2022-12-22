@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="cavelinker:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>cavelinker</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="cavelinker.war">
+      <element id="artifact" artifact-name="cavelinker:war exploded" />
+    </root>
+  </artifact>
+</component>

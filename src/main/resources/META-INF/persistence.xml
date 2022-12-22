@@ -15,6 +15,8 @@
             <property name="jakarta.persistence.schema-generation.create-script-source" value="/opt/payara/create.sql" />
 
             <property name="eclipselink.logging.level" value="FINEST"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>
