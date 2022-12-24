@@ -55,8 +55,8 @@ public class ScheduleIT extends CaveLinkerIT {
                 .log().all()
                 .header("Content-Type", "application/json")
                 .body(inputSchedule = new Schedule(updateScheduleBusinessKey,
-                        LocalDateTime.of(2022, Month.DECEMBER, 19, 18, 0),
-                        LocalDateTime.of(2022, Month.DECEMBER, 19, 22, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 27, 18, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 27, 22, 0),
                         ZoneId.of("America/Los_Angeles")))
                 .when()
                 .put("/users/7/activities/4/schedules/1")

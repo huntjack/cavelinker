@@ -117,8 +117,8 @@ public class DatabaseSetup {
                 .request()
                 .header("Content-Type", "application/json")
                 .post(Entity.json(schedule1 = new Schedule(UUID.randomUUID().toString(),
-                        LocalDateTime.of(2022, Month.DECEMBER, 19, 16, 0),
-                        LocalDateTime.of(2022, Month.DECEMBER, 19, 21, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 27, 16, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 27, 21, 0),
                         ZoneId.of("America/Los_Angeles"))));
         //User 8: Test Schedule Delete
         Response userResponse8 = userTarget
@@ -142,8 +142,8 @@ public class DatabaseSetup {
                 .request()
                 .header("Content-Type", "application/json")
                 .post(Entity.json(new Schedule(UUID.randomUUID().toString(),
-                        LocalDateTime.of(2022, Month.DECEMBER, 19, 20, 0),
-                        LocalDateTime.of(2022, Month.DECEMBER, 20, 1, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 27, 20, 0),
+                        LocalDateTime.of(2022, Month.DECEMBER, 28, 1, 0),
                         ZoneId.of("Asia/Manila"))));
         //User 9: findMatchingActivities() Test
         Response userResponse9 = userTarget

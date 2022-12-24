@@ -18,8 +18,7 @@ public class FindMatchingActivitiesIT extends CaveLinkerIT {
                 .log().all()
                 .assertThat()
                 .statusCode(200)
-                .body("size()", is(3))
-                .body("find {it.activityId == 6}.schedules.scheduleId", containsInAnyOrder(3,4,5))
+                .body("size()", is(2))
                 .body("find {it.activityId == 7}.schedules.scheduleId", containsInAnyOrder(6,7,8))
                 .body("find {it.activityId == 10}.schedules.scheduleId", containsInAnyOrder(15,16,17));
     }

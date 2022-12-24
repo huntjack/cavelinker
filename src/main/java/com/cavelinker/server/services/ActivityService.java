@@ -10,7 +10,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+
 
 @ApplicationScoped
 public class ActivityService {
@@ -35,10 +37,6 @@ public class ActivityService {
         return typedQuery.getSingleResult();
     }
    @Transactional
-   public Activity getActivity(long activityId) {
-        return entityManager.find(Activity.class, activityId);
-   }
-   @Transactional
    public Set<Activity> findMatchingActivities(long activityId) {
         TypedQuery<Activity> activityTypedQuery = entityManager.createNamedQuery("getActivityWithSchedules", Activity.class)
                 .setParameter("activityId", activityId);
@@ -52,6 +50,7 @@ public class ActivityService {
                     .setParameter("oneHourMoreThanStartTime", schedule.getStartTimeUtc().plusHours(1));
             activities.addAll(matchingActiitiesTypedQuery.getResultList());
         }
+        activities.remove(activity);
         return activities;
     }
     @Transactional(rollbackOn={Exception.class})
