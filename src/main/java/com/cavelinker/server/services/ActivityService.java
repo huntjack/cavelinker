@@ -10,7 +10,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 

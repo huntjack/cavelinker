@@ -8,7 +8,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
 import java.net.URI;
-import java.util.LinkedList;
 import java.util.Set;
 
 @Path("/users/{userId}/activities")

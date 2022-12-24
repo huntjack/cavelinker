@@ -5,8 +5,6 @@ import com.cavelinker.server.enums.ActivityType;
 import com.cavelinker.server.enums.ServerName;
 import com.cavelinker.server.testenvironmentsetup.CaveLinkerIT;
 import com.cavelinker.server.testenvironmentsetup.DatabaseSetup;
-import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
 

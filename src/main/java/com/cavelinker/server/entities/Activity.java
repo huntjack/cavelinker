@@ -42,9 +42,6 @@ public class Activity implements Serializable {
     private String activityMessage;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "activity", cascade = {CascadeType.DETACH, CascadeType.MERGE},  orphanRemoval = true)
     private List<Schedule> schedules;
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userId")
-    private User user; */
 
     public void addSchedule(Schedule schedule) {
         schedule.setActivity(this);
@@ -100,8 +97,6 @@ public class Activity implements Serializable {
     public String getActivityMessage() {return activityMessage;}
     public void setActivityMessage(String activityMessage) {this.activityMessage = activityMessage;}
 
-    /*public User getUser() {return user;}
-    public void setUser(User user) {this.user = user;} */
 
     public List<Schedule> getSchedules() {return schedules;}
     public void setSchedules(List<Schedule> schedules) {this.schedules = schedules;}
