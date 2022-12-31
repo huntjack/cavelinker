@@ -8,7 +8,7 @@
 
 People love to play team-based video games with other like-minded players. Random matchmaking is convenient, but oftentimes less enjoyable. Video games would be more fun, if static teams were easier to form. That is the goal of Cavelinker.
 
-This program was written to be the backend for an app that would help MMO players (i.e. Final Fantasy XIV players) find statics more easily.
+This program was written to be the backend for an app that would help MMO players (i.e. Final Fantasy XIV players) find statics more easily by broadening the list of players that you could potentially form a static team with and then matching you with the players whose interests best match your own. Users can enter their activity details and the scheduled times for that activity, and the server will respond with a list of all players with matching activities and schedule information.
 
 ### Running
 ***
