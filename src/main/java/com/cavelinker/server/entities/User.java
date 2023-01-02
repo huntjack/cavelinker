@@ -31,12 +31,10 @@ public class User implements Serializable {
     private List<Activity> activities;
 
     public void addActivity(Activity activity) {
-        /*activity.setUser(this);*/
         activities.add(activity);
     }
     public void removeActivity(Activity activity) {
         activities.remove(activity);
-        /*activity.setUser(null); */
     }
     @Override
     public boolean equals(Object object) {
