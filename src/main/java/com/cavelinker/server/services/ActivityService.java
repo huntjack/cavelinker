@@ -35,23 +35,7 @@ public class ActivityService {
 
         return typedQuery.getSingleResult();
     }
-   @Transactional
-   public Set<Activity> findMatchingActivities(long activityId) {
-        TypedQuery<Activity> activityTypedQuery = entityManager.createNamedQuery("getActivityWithSchedules", Activity.class)
-                .setParameter("activityId", activityId);
-        Activity activity = activityTypedQuery.getSingleResult();
-        Set<Activity> activities = new HashSet<>();
-        for (Schedule schedule : activity.getSchedules()) {
-            TypedQuery<Activity> matchingActiitiesTypedQuery = entityManager.createNamedQuery("findMatchingActivities", Activity.class)
-                    .setParameter("activityType", activity.getActivityType())
-                    .setParameter("serverName", activity.getServerName())
-                    .setParameter("oneHourLessThanEndTime", schedule.getEndTimeUtc().minusHours(1))
-                    .setParameter("oneHourMoreThanStartTime", schedule.getStartTimeUtc().plusHours(1));
-            activities.addAll(matchingActiitiesTypedQuery.getResultList());
-        }
-        activities.remove(activity);
-        return activities;
-    }
+
     @Transactional(rollbackOn={Exception.class})
     public Activity updateActivity(Activity inputActivity, long userId) {
         User user = getUserWithActivities(userId);

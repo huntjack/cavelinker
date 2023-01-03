@@ -1,6 +1,7 @@
 package com.cavelinker.server.resources;
 
 import com.cavelinker.server.entities.Activity;
+import com.cavelinker.server.services.ActivityMatchService;
 import com.cavelinker.server.services.ActivityService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -17,6 +18,8 @@ import java.util.Set;
 public class ActivityResource {
     @Inject
     private ActivityService activityService;
+    @Inject
+    private ActivityMatchService activityMatchService;
 
     @POST
     public Response createActivity(Activity activity, @PathParam("userId") long userId, @Context UriInfo uriInfo) {
@@ -34,7 +37,7 @@ public class ActivityResource {
     @GET
     @Path("/{activityId}")
     public Response findMatchingActivities(@PathParam("activityId") long activityId) {
-        Set<Activity> activities = activityService.findMatchingActivities(activityId);
+        Set<Activity> activities = activityMatchService.findMatchingActivities(activityId);
         GenericEntity<Set<Activity>> entities = new GenericEntity<>(activities){};
         return Response.ok()
                 .entity(entities)
