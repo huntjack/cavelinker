@@ -75,6 +75,7 @@ public class Schedule implements Serializable {
     public void setScheduleId(Long scheduleId) {this.scheduleId = scheduleId;}
 
     public String getScheduleBusinessKey() {return scheduleBusinessKey;}
+    public void setScheduleBusinessKey(String scheduleBusinessKey) {this.scheduleBusinessKey = scheduleBusinessKey;}
 
     public LocalDateTime getStartTimeUtc() {return startTimeUtc;}
     public void setStartTimeUtc(LocalDateTime startTimeUtc) {this.startTimeUtc = startTimeUtc;}

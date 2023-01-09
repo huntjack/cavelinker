@@ -84,6 +84,7 @@ public class Activity implements Serializable {
     public void setActivityId(Long activityId) {this.activityId = activityId;}
 
     public String getActivityBusinessKey() {return activityBusinessKey;}
+    public void setActivityBusinessKey(String activityBusinessKey) {this.activityBusinessKey = activityBusinessKey;}
 
     public String getGamerTag() {return gamerTag;}
     public void setGamerTag(String gamerTag) {this.gamerTag = gamerTag;}
