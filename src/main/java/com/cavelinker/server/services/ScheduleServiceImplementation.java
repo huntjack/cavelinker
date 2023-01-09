@@ -70,5 +70,4 @@ public class ScheduleServiceImplementation implements ScheduleService {
                         .get(scheduleIndex));
         entityManager.flush();
     }
-    public ScheduleServiceImplementation() {}
 }

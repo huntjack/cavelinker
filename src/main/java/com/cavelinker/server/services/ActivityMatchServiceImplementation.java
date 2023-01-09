@@ -32,5 +32,4 @@ public class ActivityMatchServiceImplementation implements ActivityMatchService 
         activities.remove(activity);
         return activities;
     }
-    ActivityMatchServiceImplementation() {}
 }

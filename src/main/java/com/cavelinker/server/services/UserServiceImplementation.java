@@ -41,6 +41,4 @@ public class UserServiceImplementation implements UserService {
         entityManager.remove(user);
         entityManager.flush();
     }
-
-    public UserServiceImplementation() {}
 }

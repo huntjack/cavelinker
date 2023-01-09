@@ -65,5 +65,4 @@ public class ActivityServiceImplementation implements ActivityService {
                         .get(activityIndex));
         entityManager.flush();
     }
-    public ActivityServiceImplementation() {}
 }
