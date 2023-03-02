@@ -17,7 +17,7 @@ import java.util.Objects;
         scope = Activity.class)
 @NamedQuery(name="getActivityWithSchedules",
         query="SELECT activity FROM Activity activity " +
-                "INNER JOIN FETCH activity.schedules " +
+                "LEFT JOIN FETCH activity.schedules " +
                 "WHERE activity.activityId = :activityId")
 @NamedQuery(name = "findMatchingActivities",
         query = "SELECT activity " +

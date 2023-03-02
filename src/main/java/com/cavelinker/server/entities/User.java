@@ -15,7 +15,7 @@ import java.util.Objects;
         property = "userId",
         scope = User.class)
 @NamedQuery(name="getUserWithActivities",
-        query="SELECT user FROM User user INNER JOIN FETCH user.activities WHERE user.userId = :userId")
+        query="SELECT user FROM User user LEFT JOIN FETCH user.activities WHERE user.userId = :userId")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

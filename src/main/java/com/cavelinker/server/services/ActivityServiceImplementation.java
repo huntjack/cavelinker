@@ -20,8 +20,12 @@ public class ActivityServiceImplementation implements ActivityService {
         user.addActivity(activity);
         user = entityManager.merge(user);
         entityManager.flush();
-        int activityIndex = user.getActivities().indexOf(activity);
-        return user.getActivities().get(activityIndex);
+        int activityIndex = user
+                .getActivities()
+                .indexOf(activity);
+        return user
+                .getActivities()
+                .get(activityIndex);
     }
 
     @Transactional(rollbackOn={Exception.class})

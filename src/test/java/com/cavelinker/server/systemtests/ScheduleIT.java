@@ -37,14 +37,17 @@ public class ScheduleIT extends CaveLinkerIT {
                 .header("Content-Type", "application/json")
                 .extract()
                 .response();
+        postSchedule.convertToUtc();
+        LocalDateTime expectedStartTimeUtc = postSchedule.getStartTimeUtc();
+        LocalDateTime expectedEndTimeUtc = postSchedule.getEndTimeUtc();
+        ZoneId expectedZoneId = postSchedule.getUserTimeZone();
 
         ResponseBody responseBody = response.getBody();
         Schedule scheduleResponse = responseBody.as(Schedule.class);
-        postSchedule.convertToUtc();
-        assertEquals(postSchedule.getScheduleBusinessKey(), scheduleResponse.getScheduleBusinessKey());
-        assertEquals(postSchedule.getStartTimeUtc(), scheduleResponse.getStartTimeUtc());
-        assertEquals(postSchedule.getEndTimeUtc(), scheduleResponse.getEndTimeUtc());
-        assertEquals(postSchedule.getUserTimeZone(), scheduleResponse.getUserTimeZone());
+        assertEquals(postScheduleBusinessKey, scheduleResponse.getScheduleBusinessKey());
+        assertEquals(expectedStartTimeUtc, scheduleResponse.getStartTimeUtc());
+        assertEquals(expectedEndTimeUtc, scheduleResponse.getEndTimeUtc());
+        assertEquals(expectedZoneId, scheduleResponse.getUserTimeZone());
     }
     @Test
     public void updateScheduleHappyPath() {
@@ -67,13 +70,17 @@ public class ScheduleIT extends CaveLinkerIT {
                 .header("Content-Type", "application/json")
                 .extract()
                 .response();
+        inputSchedule.convertToUtc();
+        LocalDateTime expectedStartTimeUtc = inputSchedule.getStartTimeUtc();
+        LocalDateTime expectedEndTimeUtc = inputSchedule.getEndTimeUtc();
+        ZoneId expectedZoneId = inputSchedule.getUserTimeZone();
+
         ResponseBody updatedResponseBody = updatedResponse.getBody();
         Schedule updatedSchedule = updatedResponseBody.as(Schedule.class);
-        inputSchedule.convertToUtc();
-        assertEquals(inputSchedule.getScheduleBusinessKey(), updatedSchedule.getScheduleBusinessKey());
-        assertEquals(inputSchedule.getStartTimeUtc(), updatedSchedule.getStartTimeUtc());
-        assertEquals(inputSchedule.getEndTimeUtc(), updatedSchedule.getEndTimeUtc());
-        assertEquals(inputSchedule.getUserTimeZone(), updatedSchedule.getUserTimeZone());
+        assertEquals(updateScheduleBusinessKey, updatedSchedule.getScheduleBusinessKey());
+        assertEquals(expectedStartTimeUtc, updatedSchedule.getStartTimeUtc());
+        assertEquals(expectedEndTimeUtc, updatedSchedule.getEndTimeUtc());
+        assertEquals(expectedZoneId, updatedSchedule.getUserTimeZone());
     }
     @Test
     public void deleteScheduleHappyPath() {

@@ -21,8 +21,12 @@ public class ScheduleServiceImplementation implements ScheduleService {
         activity.addSchedule(schedule);
         activity = entityManager.merge(activity);
         entityManager.flush();
-        int scheduleIndex = activity.getSchedules().indexOf(schedule);
-        return activity.getSchedules().get(scheduleIndex);
+        int scheduleIndex = activity
+                .getSchedules()
+                .indexOf(schedule);
+        return activity
+                .getSchedules()
+                .get(scheduleIndex);
     }
     @Override
     @Transactional(rollbackOn={Exception.class})
@@ -64,7 +68,9 @@ public class ScheduleServiceImplementation implements ScheduleService {
     public void deleteSchedule(long scheduleId, long activityId) {
         Activity activity = getActivityWithSchedules(activityId);
         Schedule schedule = entityManager.find(Schedule.class, scheduleId);
-        int scheduleIndex = activity.getSchedules().indexOf(schedule);
+        int scheduleIndex = activity
+                .getSchedules()
+                .indexOf(schedule);
         activity.removeSchedule(
                 activity.getSchedules()
                         .get(scheduleIndex));
